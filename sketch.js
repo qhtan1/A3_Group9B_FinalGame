@@ -818,12 +818,21 @@ function keyPressed() {
         if ((world.currentDay === 3 || world.currentDay === 5) && attentionSystem.triggerObservationUI(world.sequenceStep)) {
           isWaitingForObservationChoice = true;
         }
-        // Play tea brewing sound
+        // Play tea brewing sound at 2x gain via Web Audio API
         if (world.sequenceStep === 3) {
           var teaSound = document.getElementById("tea-sound");
           if (teaSound) {
-            teaSound.volume = 1.0;
             teaSound.currentTime = 0;
+            try {
+              var teaCtx = new (window.AudioContext || window.webkitAudioContext)();
+              var teaSrc = teaCtx.createMediaElementSource(teaSound);
+              var teaGain = teaCtx.createGain();
+              teaGain.gain.value = 2.0;
+              teaSrc.connect(teaGain);
+              teaGain.connect(teaCtx.destination);
+            } catch(e) {
+              teaSound.volume = 1.0; // fallback
+            }
             teaSound.play();
           }
         }
