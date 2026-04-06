@@ -15,6 +15,8 @@ body {
   width: 800px;
   margin: 0 auto;
   transform-origin: center center;
+  /* height matches day-display + canvas + chat-box so absolute overlays fill correctly */
+  height: 622px;
 }
 
 #canvas-holder canvas {
@@ -321,7 +323,7 @@ body {
 
 /* --- Title Screen --- */
 #title-screen {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -416,7 +418,7 @@ body {
 
 /* --- Game Over Screen --- */
 #game-over-screen {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;

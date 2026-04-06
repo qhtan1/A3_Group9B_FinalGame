@@ -1290,7 +1290,6 @@ function startGame() {
   const titleScreen = document.getElementById("title-screen");
   titleScreen.classList.remove("show");
   titleScreen.classList.add("hide");
-  document.getElementById("main-container").style.display = "block";
   // Blur any focused element so the Start button can't re-trigger via Space/Enter
   if (document.activeElement) document.activeElement.blur();
   document.getElementById("checklist-panel").style.visibility = "hidden";
