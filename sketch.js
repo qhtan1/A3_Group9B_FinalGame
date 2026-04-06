@@ -191,31 +191,48 @@ function handleObservationChoice(answer) {
     );
     if (levelChanged) {
       let msg = attentionSystem.getWarningMessage(attentionSystem.getLevel());
+      // Update music distortion immediately to match the dropped clarity level
+      let segs = attentionSystem.getSegments();
+      if (segs <= 1) {
+        setMusicDistortionLevel(2); // 1 bar — heavy
+      } else if (segs <= 2) {
+        setMusicDistortionLevel(1); // 2 bars — moderate
+      }
       // ── Clarity pause mechanic (Day 3 & Day 5) ──────────────────────────
-      // Freeze the player for 3 s, show "Wait…" prompt, then restore 1 tier
+      // Wait until the popup closes (~1000ms via processSequence), THEN show
+      // "Wait…", freeze the player for 5 s, restore clarity + music distortion
       if (world.currentDay === 3 || world.currentDay === 5) {
         player.frozen = true;
-        document.getElementById("npc-name").innerText   = "System";
-        document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
+        // Show message after processSequence has run and closed the popup
+        setTimeout(() => {
+          document.getElementById("npc-name").innerText     = "System";
+          document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
+        }, 1100);
+        // After 5 s of freeze: restore clarity and fix music distortion
         setTimeout(() => {
           player.frozen = false;
           attentionSystem.increase(34); // restore the 1 tier just lost
-          document.getElementById("npc-name").innerText   = "System";
+          // Recalculate distortion level for the restored clarity
+          let newSegs = attentionSystem.getSegments();
+          if (newSegs >= 3)      setMusicDistortionLevel(0);
+          else if (newSegs >= 2) setMusicDistortionLevel(1);
+          else                   setMusicDistortionLevel(2);
+          document.getElementById("npc-name").innerText     = "System";
           document.getElementById("dialogue-text").innerText = msg;
-        }, 3000);
+        }, 1100 + 5000);
       } else {
         setTimeout(() => {
           document.getElementById("dialogue-text").innerText = msg;
         }, 500);
       }
-    }
-
-    // Update music distortion to match new clarity level
-    let segs = attentionSystem.getSegments();
-    if (segs <= 1) {
-      setMusicDistortionLevel(2); // 1 bar — heavy
-    } else if (segs <= 2) {
-      setMusicDistortionLevel(1); // 2 bars — moderate
+    } else {
+      // Level didn't change — still update music distortion for the raw decrease
+      let segs = attentionSystem.getSegments();
+      if (segs <= 1) {
+        setMusicDistortionLevel(2);
+      } else if (segs <= 2) {
+        setMusicDistortionLevel(1);
+      }
     }
   }
 
