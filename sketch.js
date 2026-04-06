@@ -816,6 +816,15 @@ function keyPressed() {
         if ((world.currentDay === 3 || world.currentDay === 5) && attentionSystem.triggerObservationUI(world.sequenceStep)) {
           isWaitingForObservationChoice = true;
         }
+        // Play tea brewing sound
+        if (world.sequenceStep === 3) {
+          var teaSound = document.getElementById("tea-sound");
+          if (teaSound) {
+            teaSound.currentTime = 0;
+            teaSound.play();
+          }
+        }
+
 
         // Play newspaper rustling sound for first 2 seconds
         if (world.sequenceStep === 6) {
