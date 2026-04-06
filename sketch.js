@@ -136,6 +136,11 @@ let dayStartPopupTime = 0;
 // ── Day 5 state ──────────────────────────────────────────────────────────────
 let day5MirrorDone = false;   // becomes true after player looks in mirror Day 5
 
+// Clarity pause mechanic (Day 3 / Day 5)
+let clarityPauseActive = false; // true while waiting for player to rest
+let clarityStillSince  = null;  // millis() when player last became still
+let clarityRestoreMsg  = "";    // warning message shown after recovery
+
 // Family scene (plays before the two endings)
 let familyScenePhase     = 0;   // 0–7  (dialogue pairs then choice)
 let familySceneStartTime = 0;
@@ -198,28 +203,19 @@ function handleObservationChoice(answer) {
       } else if (segs <= 2) {
         setMusicDistortionLevel(1); // 2 bars — moderate
       }
-      // ── Clarity pause mechanic (Day 3 & Day 5) ──────────────────────────
-      // Wait until the popup closes (~1000ms via processSequence), THEN show
-      // "Wait…", freeze the player for 5 s, restore clarity + music distortion
+      // Clarity pause mechanic (Day 3 & Day 5)
+      // No forced freeze: "Wait…" shows after popup closes; player stops
+      // moving for 5 s to recover clarity.
       if (world.currentDay === 3 || world.currentDay === 5) {
-        player.frozen = true;
-        // Show message after processSequence has run and closed the popup
+        clarityPauseActive = true;
+        clarityStillSince  = null;
+        clarityRestoreMsg  = msg;
         setTimeout(() => {
-          document.getElementById("npc-name").innerText     = "System";
-          document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
+          if (clarityPauseActive) {
+            document.getElementById("npc-name").innerText      = "System";
+            document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
+          }
         }, 1100);
-        // After 5 s of freeze: restore clarity and fix music distortion
-        setTimeout(() => {
-          player.frozen = false;
-          attentionSystem.increase(34); // restore the 1 tier just lost
-          // Recalculate distortion level for the restored clarity
-          let newSegs = attentionSystem.getSegments();
-          if (newSegs >= 3)      setMusicDistortionLevel(0);
-          else if (newSegs >= 2) setMusicDistortionLevel(1);
-          else                   setMusicDistortionLevel(2);
-          document.getElementById("npc-name").innerText     = "System";
-          document.getElementById("dialogue-text").innerText = msg;
-        }, 1100 + 5000);
       } else {
         setTimeout(() => {
           document.getElementById("dialogue-text").innerText = msg;
@@ -506,6 +502,26 @@ function draw() {
 
     let obstacles = roomObstacles[world.currentRoom] || [];
     player.handleMovement(obstacles, width, height, day3Clarity);
+
+    // Clarity pause: recover when player stands still for 5 s
+    if (clarityPauseActive) {
+      if (!player.isMoving) {
+        if (clarityStillSince === null) clarityStillSince = millis();
+        if (millis() - clarityStillSince >= 5000) {
+          clarityPauseActive = false;
+          clarityStillSince  = null;
+          attentionSystem.increase(34);
+          let rSegs = attentionSystem.getSegments();
+          if (rSegs >= 3)      setMusicDistortionLevel(0);
+          else if (rSegs >= 2) setMusicDistortionLevel(1);
+          else                 setMusicDistortionLevel(2);
+          document.getElementById("npc-name").innerText      = "System";
+          document.getElementById("dialogue-text").innerText = clarityRestoreMsg;
+        }
+      } else {
+        clarityStillSince = null; // moving — reset still-timer
+      }
+    }
 
     checkInteractions();
     player.draw(day3Clarity);
@@ -1369,6 +1385,7 @@ function startGame() {
   document.getElementById("dialogue-text").innerText =
     "Note to self: don\u2019t forget\u2026 finish routine before leaving.";
   dayStartPopupTime = millis();
+  clarityPauseActive = false; clarityStillSince = null;
   gameState = "DAY_START";
 }
 
@@ -1418,6 +1435,7 @@ function restartGame() {
   document.getElementById("dialogue-text").innerText =
     "Note to self: don\u2019t forget\u2026 finish routine before leaving.";
   dayStartPopupTime = millis();
+  clarityPauseActive = false; clarityStillSince = null;
   gameState = "DAY_START";
 }
 
