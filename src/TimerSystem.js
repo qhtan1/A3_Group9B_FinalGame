@@ -32,6 +32,19 @@ class TimerSystem {
     this.isActive = false;
   }
 
+  /** Freeze the timer while game is paused */
+  pause() {
+    if (this.isActive) this._pauseStart = millis();
+  }
+
+  /** Unfreeze after game resumes */
+  resume() {
+    if (this.isActive && this._pauseStart !== undefined) {
+      this.pausedTime += millis() - this._pauseStart;
+      this._pauseStart = undefined;
+    }
+  }
+
   /** Reset timer to full 3 minutes */
   reset() {
     this.remainingSeconds = this.totalSeconds;

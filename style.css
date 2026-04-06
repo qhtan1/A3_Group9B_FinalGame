@@ -58,19 +58,46 @@ body {
 /* --- 天数显示栏样式 --- */
 #day-display {
   width: 100%;
-  background-color: #ece7d1; /* 和对话框一样的复古纸张底色 */
-  border: 8px solid #8a7650; /* 同样的边框颜色 */
-  border-bottom: none; /* 去掉底边框，让它和画面无缝连接 */
+  background-color: #ece7d1;
+  border: 8px solid #8a7650;
+  border-bottom: none;
   padding: 10px;
   box-sizing: border-box;
   text-align: center;
   font-size: 24px;
   font-weight: bold;
   color: #8a7650;
-  letter-spacing: 2px; /* 让字母稍微拉开一点，更有仪式感 */
+  letter-spacing: 2px;
   text-transform: uppercase;
   position: relative;
   z-index: 10;
+}
+
+#help-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  font-weight: bold;
+  color: #8a7650;
+  background: transparent;
+  border: 2px solid #8a7650;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s, background 0.2s;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+#help-btn:hover {
+  color: #ece7d1;
+  background: #8a7650;
 }
 
 /* --- 游戏画布容器 --- */

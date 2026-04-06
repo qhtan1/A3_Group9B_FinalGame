@@ -139,6 +139,7 @@ let day5MirrorDone = false;   // becomes true after player looks in mirror Day 5
 // Clarity pause mechanic (Day 3 / Day 5)
 let clarityPauseActive = false; // true while waiting for player to rest
 let clarityStillSince  = null;  // millis() when player last became still
+let _clarityPausedAt   = null;  // set when game pauses mid-still-timer
 let clarityRestoreMsg  = "";    // warning message shown after recovery
 
 // Family scene (plays before the two endings)
@@ -1466,12 +1467,19 @@ let _stateBeforePause = "EXPLORE";
 function pauseGame() {
   _stateBeforePause = gameState;
   gameState = "PAUSED";
+  timerSystem.pause();
+  if (clarityStillSince !== null) _clarityPausedAt = millis();
   document.getElementById("pause-screen").classList.add("show");
   if (document.activeElement) document.activeElement.blur();
 }
 
 function resumeGame() {
   gameState = _stateBeforePause;
+  timerSystem.resume();
+  if (_clarityPausedAt !== null && clarityStillSince !== null) {
+    clarityStillSince += millis() - _clarityPausedAt;
+  }
+  _clarityPausedAt = null;
   document.getElementById("pause-screen").classList.remove("show");
   if (document.activeElement) document.activeElement.blur();
 }
