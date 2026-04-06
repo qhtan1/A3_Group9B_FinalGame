@@ -526,6 +526,16 @@ function draw() {
       }
     }
 
+    // Walking sound: play while moving, pause when still
+    var _walkSnd = document.getElementById("walking-sound");
+    if (_walkSnd) {
+      if (player.isMoving) {
+        if (_walkSnd.paused) _walkSnd.play();
+      } else {
+        if (!_walkSnd.paused) { _walkSnd.pause(); _walkSnd.currentTime = 0; }
+      }
+    }
+
     checkInteractions();
     player.draw(day3Clarity);
 
@@ -1474,6 +1484,9 @@ function pauseGame() {
   var _alarm = document.getElementById("alarm-sound");
   _pausedAlarmWasPlaying = _alarm && !_alarm.paused;
   if (_pausedAlarmWasPlaying) _alarm.pause();
+  // Stop walking sound
+  var _walk = document.getElementById("walking-sound");
+  if (_walk && !_walk.paused) { _walk.pause(); _walk.currentTime = 0; }
   document.getElementById("pause-screen").classList.add("show");
   if (document.activeElement) document.activeElement.blur();
 }
