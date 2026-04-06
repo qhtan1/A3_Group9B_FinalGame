@@ -4,15 +4,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   font-family: "Courier New", Courier, monospace;
-  padding: 20px;
 }
 
 #main-container {
   position: relative;
   width: 800px;
   margin: 0 auto;
+  transform-origin: center center;
 }
 
 #canvas-holder canvas {

@@ -103,6 +103,21 @@
 
     <button id="music-btn" onclick="toggleMusic()" title="Toggle music">♪</button>
 
+    <script>
+      function fitGameToScreen() {
+        var container = document.getElementById('main-container');
+        if (!container) return;
+        // Total width includes sidebars (170px on each side) + 800px game = 1140px
+        // Total height: day-display (~52px) + canvas (450px) + chat-box (120px) = 622px, use 630
+        var scaleX = window.innerWidth / 1140;
+        var scaleY = window.innerHeight / 630;
+        var scale = Math.min(scaleX, scaleY);
+        container.style.transform = 'scale(' + scale + ')';
+      }
+      window.addEventListener('resize', fitGameToScreen);
+      window.addEventListener('load', fitGameToScreen);
+    </script>
+
     <script src="src/WorldLevel.js"></script>
     <script src="src/Player.js"></script>
     <script src="src/ChecklistManager.js"></script>
