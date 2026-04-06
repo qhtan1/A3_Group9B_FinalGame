@@ -1462,13 +1462,18 @@ function restartGame() {
 }
 
 // --- Pause ---
-let _stateBeforePause = "EXPLORE";
+let _stateBeforePause       = "EXPLORE";
+let _pausedAlarmWasPlaying = false;
 
 function pauseGame() {
   _stateBeforePause = gameState;
   gameState = "PAUSED";
   timerSystem.pause();
   if (clarityStillSince !== null) _clarityPausedAt = millis();
+  // Pause alarm if it is currently ringing
+  var _alarm = document.getElementById("alarm-sound");
+  _pausedAlarmWasPlaying = _alarm && !_alarm.paused;
+  if (_pausedAlarmWasPlaying) _alarm.pause();
   document.getElementById("pause-screen").classList.add("show");
   if (document.activeElement) document.activeElement.blur();
 }
@@ -1480,6 +1485,12 @@ function resumeGame() {
     clarityStillSince += millis() - _clarityPausedAt;
   }
   _clarityPausedAt = null;
+  // Resume alarm if it was playing before pause
+  if (_pausedAlarmWasPlaying) {
+    var _alarm = document.getElementById("alarm-sound");
+    if (_alarm) _alarm.play();
+  }
+  _pausedAlarmWasPlaying = false;
   document.getElementById("pause-screen").classList.remove("show");
   if (document.activeElement) document.activeElement.blur();
 }
