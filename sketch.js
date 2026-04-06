@@ -1291,6 +1291,9 @@ function showGameOverScreen() {
   if (gameOverScreenShown) return;
   gameOverScreenShown = true;
   document.getElementById("game-over-screen").classList.add("show");
+  document.getElementById("checklist-panel").style.visibility = "hidden";
+  document.getElementById("attention-panel").style.visibility = "hidden";
+  document.getElementById("timer-panel").style.visibility     = "hidden";
 }
 
 /**
