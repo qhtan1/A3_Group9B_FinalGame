@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Before I Forget - Day 1 Prototype</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="libraries/p5.min.js"></script>
+  </head>
+  <body>
+    <div id="main-container" style="display:none">
+      <div id="day-display">Day 1</div>
+
+      <div id="canvas-holder"></div>
+
+      <div id="timer-panel" style="visibility:hidden">
+        <div id="timer-display">7:00</div>
+      </div>
+
+      <div id="checklist-panel">
+        <div id="checklist-title">Routine</div>
+        <div id="checklist-items">
+          <div class="checklist-item">
+            <input type="checkbox" disabled />
+            <span>Check alarm</span>
+          </div>
+          <div class="checklist-item checklist-item-wrap">
+            <input type="checkbox" disabled />
+            <span>Look at<br>mirror</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" disabled />
+            <span>Brew tea</span>
+          </div>
+          <div class="checklist-item checklist-item-wrap">
+            <input type="checkbox" disabled />
+            <span>Talk to<br>partner</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" disabled />
+            <span>Read news</span>
+          </div>
+          <div class="checklist-item checklist-item-wrap">
+            <input type="checkbox" disabled />
+            <span>Greet<br>neighbor</span>
+          </div>
+          <div class="checklist-item checklist-item-wrap">
+            <input type="checkbox" disabled />
+            <span>Check door<br>number</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="attention-panel" style="visibility:hidden">
+        <div id="attention-title">Clarity</div>
+        <div id="attention-bar">
+          <div class="attention-segment active"></div>
+          <div class="attention-segment active"></div>
+          <div class="attention-segment active"></div>
+        </div>
+        <div id="attention-icon">☕</div>
+      </div>
+
+<div id="chat-box">
+        <div id="npc-header">
+          <span id="npc-name">System</span>
+        </div>
+        <div id="dialogue-container">
+          <p id="dialogue-text">
+            Use WASD or Arrows to move. Approach objects and press 'E'.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Loading screen — shown during p5 preload(), hidden once setup() runs -->
+    <div id="loading-screen">
+      <div id="loading-bar-wrap">
+        <div id="loading-bar-track">
+          <div id="loading-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="title-screen" class="show">
+      <div id="title-content">
+        <p id="title-subtitle">a story about memory</p>
+        <h1 id="title-heading">Before I Forget</h1>
+        <button id="start-btn" onclick="startGame()">Start</button>
+        <p id="title-hint">or press Enter</p>
+      </div>
+    </div>
+
+    <div id="game-over-screen">
+      <p id="game-over-text">I don't remember anything...</p>
+      <button id="restart-btn" onclick="restartGame()">Restart</button>
+    </div>
+
+    <audio id="bg-music" loop src="tunetank-cozy-lofi-music-409359.mp3"></audio>
+    <audio id="alarm-sound" loop src="assets/alarm.mp3"></audio>
+
+    <button id="music-btn" onclick="toggleMusic()" title="Toggle music">♪</button>
+
+    <script src="src/WorldLevel.js"></script>
+    <script src="src/Player.js"></script>
+    <script src="src/ChecklistManager.js"></script>
+    <script src="src/TimerSystem.js"></script>
+    <script src="src/AttentionSystem.js"></script>
+    <script src="sketch.js"></script>
+  </body>
+</html>

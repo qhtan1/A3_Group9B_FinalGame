@@ -1,0 +1,508 @@
+body {
+  background-color: #1a1a1a;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: "Courier New", Courier, monospace;
+  padding: 20px;
+}
+
+#main-container {
+  position: relative;
+  width: 800px;
+  margin: 0 auto;
+}
+
+#canvas-holder canvas {
+  width: 800px !important;
+  height: 450px !important;
+  image-rendering: pixelated;
+  border: 8px solid #8a7650;
+  border-bottom: none;
+  display: block;
+  box-sizing: border-box;
+}
+
+#chat-box {
+  width: 100%;
+  height: 120px;
+  background-color: #ece7d1;
+  border: 8px solid #8a7650;
+  border-top: none;
+  padding: 15px;
+  box-sizing: border-box;
+  color: #8a7650;
+  position: relative;
+  z-index: 15;
+}
+
+#npc-name {
+  font-weight: bold;
+  color: #8e977d;
+  border-bottom: 2px solid #dbcea5;
+  font-size: 18px;
+}
+
+#dialogue-text {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* --- 天数显示栏样式 --- */
+#day-display {
+  width: 100%;
+  background-color: #ece7d1; /* 和对话框一样的复古纸张底色 */
+  border: 8px solid #8a7650; /* 同样的边框颜色 */
+  border-bottom: none; /* 去掉底边框，让它和画面无缝连接 */
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #8a7650;
+  letter-spacing: 2px; /* 让字母稍微拉开一点，更有仪式感 */
+  text-transform: uppercase;
+  position: relative;
+  z-index: 10;
+}
+
+/* --- 游戏画布容器 --- */
+#canvas-holder {
+  position: relative;
+  width: 800px;
+  height: 450px;
+  z-index: 20;
+}
+
+/* --- 交互提示 --- */
+#interaction-hint {
+  position: absolute;
+  top: 240px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(236, 231, 209, 0.95);
+  border: 3px solid #8a7650;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #8a7650;
+  pointer-events: none;
+  z-index: 80;
+  display: none !important;
+  white-space: nowrap;
+}
+
+#interaction-hint.show {
+  display: block !important;
+}
+
+/* --- 计时器面板 --- */
+#timer-panel {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  font-family: "Courier New", Courier, monospace;
+  z-index: 75;
+  text-align: left;
+}
+
+#timer-display {
+  font-size: 36px;
+  font-weight: 700;
+  color: #5a4a2f;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+#timer-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #5a4a2f;
+  margin-top: 1px;
+}
+
+#timer-panel:has(#timer-display:contains("00:")) #timer-display {
+  color: #f44336;
+}
+
+/* --- 清单面板 (CSS版本) --- */
+#checklist-panel {
+  position: absolute;
+  top: 70px;
+  left: -170px;
+  width: 150px;
+  background: rgba(236, 231, 209, 0.98);
+  border: 3px solid #8a7650;
+  border-radius: 4px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 75;
+  backdrop-filter: blur(2px);
+}
+
+#checklist-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5a4a2f;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border-bottom: 2px solid #8a7650;
+  padding-bottom: 4px;
+}
+
+#checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #5a4a2f;
+  font-weight: 600;
+}
+
+.checklist-item input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  accent-color: #8a7650;
+}
+
+.checklist-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checklist-item-wrap span {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.3;
+}
+
+#checklist-progress {
+  font-size: 9px;
+  color: #6a5a3f;
+  text-align: center;
+  border-top: 1px solid #8a7650;
+  padding-top: 4px;
+  font-weight: 600;
+}
+
+/* --- 注意力面板 (CSS版本) --- */
+#attention-panel {
+  position: absolute;
+  top: 70px;
+  right: -170px;
+  width: 160px;
+  background: rgba(236, 231, 209, 0.98);
+  border: 3px solid #8a7650;
+  border-radius: 4px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 75;
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#attention-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5a4a2f;
+  text-transform: uppercase;
+  border-bottom: 2px solid #8a7650;
+  padding-bottom: 4px;
+}
+
+#attention-bar {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.attention-segment {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #8a7650;
+  border-radius: 2px;
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
+
+.attention-segment.active {
+  background-color: #4caf50;
+}
+
+.attention-segment.active.moderate {
+  background-color: #ffc107;
+}
+
+.attention-segment.active.low {
+  background-color: #ff9800;
+}
+
+.attention-segment.active.critical {
+  background-color: #f44336;
+}
+
+#attention-icon {
+  text-align: center;
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* --- Loading Screen --- */
+#loading-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('assets/loading_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 9vh;
+  box-sizing: border-box;
+  z-index: 30000;
+  opacity: 1;
+  transition: opacity 0.7s ease;
+}
+
+#loading-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loading-bar-wrap {
+  width: 420px;
+  max-width: 70vw;
+}
+
+#loading-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(26, 15, 5, 0.55);
+  border: 2px solid #5a4a2f;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+#loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: #ece7d1;
+  border-radius: 1px;
+  transition: width 0.25s ease;
+  box-shadow: 0 0 6px rgba(236, 231, 209, 0.5);
+}
+
+/* --- Title Screen --- */
+#title-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+#title-screen.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#title-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#title-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: titleFadeIn 2s ease forwards;
+}
+
+#title-subtitle {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  color: #5a4a2f;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+#title-heading {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 52px;
+  font-weight: 700;
+  color: #ece7d1;
+  letter-spacing: 3px;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 0 40px rgba(138, 118, 80, 0.4);
+}
+
+#start-btn {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  color: #8a7650;
+  background: transparent;
+  border: 2px solid #8a7650;
+  padding: 12px 48px;
+  cursor: pointer;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 16px;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+#start-btn:hover {
+  color: #ece7d1;
+  border-color: #ece7d1;
+  box-shadow: 0 0 16px rgba(236, 231, 209, 0.15);
+}
+
+#title-hint {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  color: #3a3028;
+  letter-spacing: 2px;
+  margin: 0;
+  animation: titlePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes titleFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes titlePulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.8; }
+}
+
+/* --- Game Over Screen --- */
+#game-over-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 1.2s ease;
+}
+
+#game-over-screen.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#game-over-text {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 28px;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 2px;
+  opacity: 0;
+  animation: fadeInText 2s ease 0.5s forwards;
+}
+
+#restart-btn {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  color: #8a7650;
+  background: transparent;
+  border: 2px solid #8a7650;
+  padding: 10px 32px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeInText 1s ease 3.5s forwards;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+#restart-btn:hover {
+  color: #ece7d1;
+  border-color: #ece7d1;
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* --- Music Toggle Button --- */
+#music-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20px;
+  color: #8a7650;
+  background: rgba(236, 231, 209, 0.95);
+  border: 2px solid #8a7650;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+
+#music-btn:hover {
+  color: #ece7d1;
+  background: #8a7650;
+}
+
+#music-btn.muted {
+  color: #aaa;
+  border-color: #666;
+  background: rgba(50, 45, 35, 0.9);
+}
+

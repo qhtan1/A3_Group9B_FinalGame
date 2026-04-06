@@ -1,0 +1,29 @@
+{
+  "day1": {
+    "label": "Day 1 - Baseline",
+    "mirrorDelay": 0,
+    "npcName": "Emma",
+    "teaLabel": "TEA",
+    "newspaper": "City Celebrates Spring",
+    "doorPlate": "204",
+    "dialogue": "Good morning. The tea is almost ready."
+  },
+  "day3": {
+    "label": "Day 3 - Distortion",
+    "mirrorDelay": 10,
+    "npcName": "She",
+    "teaLabel": "TA",
+    "newspaper": "Ci y Cele ra es Sp ing",
+    "doorPlate": "20?",
+    "dialogue": "You've always had this one. Don't you remember?"
+  },
+  "day5": {
+    "label": "Day 5 - Identity",
+    "mirrorDelay": 30,
+    "npcName": "???",
+    "teaLabel": "???",
+    "newspaper": ".... ........ ......",
+    "doorPlate": "???",
+    "dialogue": "..."
+  }
+}
