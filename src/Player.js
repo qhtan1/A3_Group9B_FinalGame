@@ -13,6 +13,9 @@ class Player {
     // Day 5: Elderly sprite — uses a warm sepia tint on the existing sprites
     this.useElderlySprite = false;
 
+    // Clarity pause mechanic (Day 3 / Day 5)
+    this.frozen = false;
+
     // Day 5: Wrong direction mechanic
     this.wrongDirEnabled  = false;
     this._wrongDirTimer   = 0;
@@ -106,6 +109,9 @@ class Player {
     var nextX = this.x;
     var nextY = this.y;
     this.isMoving = false;
+
+    // Clarity pause: block all movement while frozen
+    if (this.frozen) return;
 
     // ── Day 5: Wrong-direction glitch ─────────────────────────────────────
     if (this.wrongDirEnabled) {

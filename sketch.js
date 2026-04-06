@@ -191,9 +191,23 @@ function handleObservationChoice(answer) {
     );
     if (levelChanged) {
       let msg = attentionSystem.getWarningMessage(attentionSystem.getLevel());
-      setTimeout(() => {
-        document.getElementById("dialogue-text").innerText = msg;
-      }, 500);
+      // ── Clarity pause mechanic (Day 3 & Day 5) ──────────────────────────
+      // Freeze the player for 3 s, show "Wait…" prompt, then restore 1 tier
+      if (world.currentDay === 3 || world.currentDay === 5) {
+        player.frozen = true;
+        document.getElementById("npc-name").innerText   = "System";
+        document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
+        setTimeout(() => {
+          player.frozen = false;
+          attentionSystem.increase(34); // restore the 1 tier just lost
+          document.getElementById("npc-name").innerText   = "System";
+          document.getElementById("dialogue-text").innerText = msg;
+        }, 3000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("dialogue-text").innerText = msg;
+        }, 500);
+      }
     }
 
     // Update music distortion to match new clarity level
