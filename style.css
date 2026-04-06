@@ -328,7 +328,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(13, 13, 13, 0.88);
+  background: rgba(13, 13, 13, 0.82);
+  backdrop-filter: blur(6px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -389,7 +390,7 @@ body {
 #pause-hint {
   font-family: "Courier New", Courier, monospace;
   font-size: 14px;
-  color: #3a3028;
+  color: #8a7650;
   letter-spacing: 4px;
   margin: 0;
   animation: titlePulse 2.5s ease-in-out infinite;
@@ -474,7 +475,7 @@ body {
 #title-hint {
   font-family: "Courier New", Courier, monospace;
   font-size: 14px;
-  color: #3a3028;
+  color: #8a7650;
   letter-spacing: 4px;
   margin: 0;
   animation: titlePulse 2.5s ease-in-out infinite;
@@ -547,7 +548,7 @@ body {
 #restart-hint {
   font-family: "Courier New", Courier, monospace;
   font-size: 14px;
-  color: #3a3028;
+  color: #8a7650;
   letter-spacing: 4px;
   margin: 0;
   opacity: 0;
