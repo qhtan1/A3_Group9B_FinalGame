@@ -731,7 +731,7 @@ function keyPressed() {
         "Use WASD or Arrows to explore.";
       // Start looping alarm — stops when player interacts with alarm clock
       var _alarmPlay = document.getElementById("alarm-sound");
-      _alarmPlay.volume = 0.75;
+      _alarmPlay.volume = 1.0;
       _alarmPlay.play();
     }
     return;
@@ -827,7 +827,7 @@ function keyPressed() {
               var teaCtx = new (window.AudioContext || window.webkitAudioContext)();
               var teaSrc = teaCtx.createMediaElementSource(teaSound);
               var teaGain = teaCtx.createGain();
-              teaGain.gain.value = 2.0;
+              teaGain.gain.value = 3.0;
               teaSrc.connect(teaGain);
               teaGain.connect(teaCtx.destination);
             } catch(e) {
