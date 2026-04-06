@@ -730,7 +730,9 @@ function keyPressed() {
       document.getElementById("dialogue-text").innerText =
         "Use WASD or Arrows to explore.";
       // Start looping alarm — stops when player interacts with alarm clock
-      document.getElementById("alarm-sound").play();
+      var _alarmPlay = document.getElementById("alarm-sound");
+      _alarmPlay.volume = 0.75;
+      _alarmPlay.play();
     }
     return;
   }
@@ -820,6 +822,7 @@ function keyPressed() {
         if (world.sequenceStep === 3) {
           var teaSound = document.getElementById("tea-sound");
           if (teaSound) {
+            teaSound.volume = 1.0;
             teaSound.currentTime = 0;
             teaSound.play();
           }
@@ -830,6 +833,7 @@ function keyPressed() {
         if (world.sequenceStep === 6) {
           var npSound = document.getElementById("newspaper-sound");
           if (npSound) {
+            npSound.volume = 1.0;
             npSound.currentTime = 0;
             npSound.play();
             setTimeout(function() { npSound.pause(); npSound.currentTime = 0; }, 2000);
@@ -1389,6 +1393,7 @@ function toggleMusic() {
     btn.classList.add("muted");
     musicPlaying = false;
   } else {
+    music.volume = 0.3;
     music.play();
     initMusicDistortion(); // set up Web Audio chain on first play
     btn.textContent = "♫";
