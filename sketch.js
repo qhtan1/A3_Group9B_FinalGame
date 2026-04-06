@@ -537,6 +537,9 @@ function draw() {
     drawBackground();
     player.draw(1);
     drawDayStartPopup();
+  } else if (gameState === "PAUSED") {
+    drawBackground();
+    player.draw(day3Clarity);
   } else if (gameState === "TRANSITION") {
     background(0);
   } else if (gameState === "GAME_OVER") {
@@ -742,6 +745,22 @@ function drawAdminOverlay() {
 }
 
 function keyPressed() {
+  // ESC toggles pause from any pauseable state
+  if (keyCode === 27) {
+    if (gameState === "PAUSED") {
+      resumeGame();
+    } else if (gameState === "EXPLORE" || gameState === "INTERACT" || gameState === "DAY_START") {
+      pauseGame();
+    }
+    return;
+  }
+
+  // Any key resumes when paused
+  if (gameState === "PAUSED") {
+    resumeGame();
+    return;
+  }
+
   // Title screen — any key starts the game
   if (gameState === "TITLE") {
     startGame();
@@ -1439,6 +1458,22 @@ function restartGame() {
   dayStartPopupTime = millis();
   clarityPauseActive = false; clarityStillSince = null;
   gameState = "DAY_START";
+}
+
+// --- Pause ---
+let _stateBeforePause = "EXPLORE";
+
+function pauseGame() {
+  _stateBeforePause = gameState;
+  gameState = "PAUSED";
+  document.getElementById("pause-screen").classList.add("show");
+  if (document.activeElement) document.activeElement.blur();
+}
+
+function resumeGame() {
+  gameState = _stateBeforePause;
+  document.getElementById("pause-screen").classList.remove("show");
+  if (document.activeElement) document.activeElement.blur();
 }
 
 // --- Music Control ---
