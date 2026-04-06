@@ -210,12 +210,6 @@ function handleObservationChoice(answer) {
         clarityPauseActive = true;
         clarityStillSince  = null;
         clarityRestoreMsg  = msg;
-        setTimeout(() => {
-          if (clarityPauseActive) {
-            document.getElementById("npc-name").innerText      = "System";
-            document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
-          }
-        }, 1100);
       } else {
         setTimeout(() => {
           document.getElementById("dialogue-text").innerText = msg;
@@ -505,6 +499,9 @@ function draw() {
 
     // Clarity pause: recover when player stands still for 5 s
     if (clarityPauseActive) {
+      // Persistently show Wait message while clarity is not full
+      document.getElementById("npc-name").innerText      = "System";
+      document.getElementById("dialogue-text").innerText = "Wait… I need a second.";
       if (!player.isMoving) {
         if (clarityStillSince === null) clarityStillSince = millis();
         if (millis() - clarityStillSince >= 5000) {
