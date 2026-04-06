@@ -1181,7 +1181,7 @@ function updateDialogueForStep(step) {
     // ── Day 5 — same mechanics as Day 3; mirror triggers sprite swap ──────
     if (step === 0) {
       npcName.innerText = "System";
-      uiText.innerText  = "7:00\u2026 I need to leave before 7:40\u2026 I think.";
+      uiText.innerText  = "7:00\u2026 before 7:40\u2026 need to go\u2026";
     }
     if (step === 3) {
       npcName.innerText = "System";
