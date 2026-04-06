@@ -864,6 +864,11 @@ function keyPressed() {
       processSequence();
     }
   }
+
+  // M key toggles music from any game state
+  if (keyCode === 77) {
+    toggleMusic();
+  }
 }
 
 function drawUIPopup() {

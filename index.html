@@ -103,7 +103,7 @@
     <audio id="newspaper-sound" src="assets/newspaper.mp3"></audio>
     <audio id="tea-sound" src="assets/tea.mp3"></audio>
 
-    <button id="music-btn" onclick="toggleMusic()" title="Toggle music">♪</button>
+    <button id="music-btn" onclick="toggleMusic(); this.blur();" title="Toggle music (M)">♪</button>
 
     <script>
       function fitGameToScreen() {
