@@ -505,15 +505,20 @@ function draw() {
       if (!player.isMoving) {
         if (clarityStillSince === null) clarityStillSince = millis();
         if (millis() - clarityStillSince >= 5000) {
-          clarityPauseActive = false;
-          clarityStillSince  = null;
+          clarityStillSince = null; // reset for potential next tier
           attentionSystem.increase(34);
           let rSegs = attentionSystem.getSegments();
-          if (rSegs >= 3)      setMusicDistortionLevel(0);
-          else if (rSegs >= 2) setMusicDistortionLevel(1);
-          else                 setMusicDistortionLevel(2);
-          document.getElementById("npc-name").innerText      = "System";
-          document.getElementById("dialogue-text").innerText = clarityRestoreMsg;
+          if (rSegs >= 3) {
+            // Fully recovered
+            clarityPauseActive = false;
+            setMusicDistortionLevel(0);
+            document.getElementById("npc-name").innerText      = "System";
+            document.getElementById("dialogue-text").innerText = clarityRestoreMsg;
+          } else {
+            // Partial recovery — keep showing Wait, player needs another 5 s
+            if (rSegs >= 2) setMusicDistortionLevel(1);
+            else            setMusicDistortionLevel(2);
+          }
         }
       } else {
         clarityStillSince = null; // moving — reset still-timer
@@ -678,7 +683,7 @@ function checkInteractions() {
 
     if (distance < 45) {
       document.getElementById("dialogue-text").innerText = activeTarget.hint;
-    } else {
+    } else if (!clarityPauseActive) {
       document.getElementById("dialogue-text").innerText =
         "Use WASD or Arrows to explore.";
     }
@@ -1168,7 +1173,7 @@ function processSequence() {
     if ((world.currentDay === 3 || world.currentDay === 5) && world.sequenceStep === 4) {
       document.getElementById("npc-name").innerText = "Partner";
       document.getElementById("dialogue-text").innerText = "You've always had this one.";
-    } else {
+    } else if (!clarityPauseActive) {
       document.getElementById("npc-name").innerText = "System";
       document.getElementById("dialogue-text").innerText =
         "Use WASD or Arrows to explore.";
