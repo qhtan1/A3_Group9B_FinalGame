@@ -693,8 +693,8 @@ function drawAdminOverlay() {
 }
 
 function keyPressed() {
-  // Title screen — Enter or Space to start
-  if (gameState === "TITLE" && (keyCode === ENTER || keyCode === 32)) {
+  // Title screen — any key starts the game
+  if (gameState === "TITLE") {
     startGame();
     return;
   }

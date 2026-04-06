@@ -395,9 +395,9 @@ body {
 
 #title-hint {
   font-family: "Courier New", Courier, monospace;
-  font-size: 11px;
+  font-size: 14px;
   color: #3a3028;
-  letter-spacing: 2px;
+  letter-spacing: 4px;
   margin: 0;
   animation: titlePulse 2.5s ease-in-out infinite;
 }
