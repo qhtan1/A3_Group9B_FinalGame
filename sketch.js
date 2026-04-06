@@ -775,8 +775,8 @@ function keyPressed() {
     }
   }
 
-  // Handle game over restart
-  if (gameState === "GAME_OVER" && keyCode === 82) {
+  // Handle game over restart — any key
+  if (gameState === "GAME_OVER") {
     restartGame();
     return;
   }
