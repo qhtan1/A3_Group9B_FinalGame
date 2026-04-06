@@ -817,6 +817,16 @@ function keyPressed() {
           isWaitingForObservationChoice = true;
         }
 
+        // Play newspaper rustling sound for first 2 seconds
+        if (world.sequenceStep === 6) {
+          var npSound = document.getElementById("newspaper-sound");
+          if (npSound) {
+            npSound.currentTime = 0;
+            npSound.play();
+            setTimeout(function() { npSound.pause(); npSound.currentTime = 0; }, 2000);
+          }
+        }
+
         updateDialogueForStep(world.sequenceStep);
       } else {
         // If player skipped an optional popup and went straight to a door/exit,
