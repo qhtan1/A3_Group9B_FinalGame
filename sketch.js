@@ -639,11 +639,11 @@ function checkInteractions() {
 
   // Steps that are navigation-required (cannot skip to a door/exit).
   // Alarm (step 0): must interact before leaving the bedroom — all days.
-  // Mirror (step 1, Day 3 only): required so the door never overrides it.
+  // Mirror (step 1, Day 3 & 5): required so the door never overrides it.
   // Newspaper (step 6, Day 1 only): must read before leaving the living room.
   let stepIsRequired =
     world.sequenceStep === 0 ||
-    (world.sequenceStep === 1 && world.currentDay === 3) ||
+    (world.sequenceStep === 1 && (world.currentDay === 3 || world.currentDay === 5)) ||
     (world.sequenceStep === 6 && world.currentDay === 1);
 
   // If the current step is an optional popup, also check whether the next
@@ -897,6 +897,12 @@ function keyPressed() {
         if ((world.currentDay === 3 || world.currentDay === 5) && attentionSystem.triggerObservationUI(world.sequenceStep)) {
           isWaitingForObservationChoice = true;
         }
+        // Day 5 mirror: trigger elderly sprite swap
+        if (world.currentDay === 5 && world.sequenceStep === 1 && !day5MirrorDone) {
+          day5MirrorDone          = true;
+          player.useElderlySprite = true;
+        }
+
         // Play tea brewing sound at 2x gain via Web Audio API
         if (world.sequenceStep === 3) {
           var teaSound = document.getElementById("tea-sound");
@@ -1176,11 +1182,6 @@ function processSequence() {
   }
 
   world.advanceSequence();
-
-  // Day 5: mirror (step 1) cannot be interacted with — auto-skip it
-  if (world.sequenceStep === 1 && world.currentDay === 5) {
-    world.advanceSequence();
-  }
 
   if (world.sequenceStep === 3) {
     world.changeRoom("Kitchen");
