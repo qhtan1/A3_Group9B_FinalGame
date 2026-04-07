@@ -1294,7 +1294,10 @@ function updateDialogueForStep(step) {
     }
     if (step === 8) {
       npcName.innerText = "Neighbor";
-      uiText.innerText  = "Your apartment has always been 204.";
+      uiText.innerText  = "Can I help you?";
+      // Play Day 5 neighbour audio
+      var _nb5 = document.getElementById("day5-neighbour-sound");
+      if (_nb5) { _nb5.currentTime = 0; _nb5.play(); }
     }
     if (step === 9) {
       npcName.innerText = "System";
