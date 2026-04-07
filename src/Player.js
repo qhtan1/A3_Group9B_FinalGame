@@ -40,8 +40,13 @@ class Player {
     var currentImg = null;
     if (this.useElderlySprite && typeof elderlySprites !== "undefined") {
       var elderlyDir = elderlySprites[this.direction];
-      if (elderlyDir) currentImg = elderlyDir[this.animFrame];
-    } else if (typeof playerSprites !== "undefined" && playerSprites[this.direction]) {
+      if (elderlyDir) {
+        var candidate = elderlyDir[this.animFrame];
+        // Only use if actually loaded (width > 0); otherwise fall through to player sprites
+        if (candidate && candidate.width > 0) currentImg = candidate;
+      }
+    }
+    if (!currentImg && typeof playerSprites !== "undefined" && playerSprites[this.direction]) {
       currentImg = playerSprites[this.direction][this.animFrame];
     }
 
