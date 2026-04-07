@@ -39,15 +39,8 @@ class Player {
     // Pick sprite set: elderly sprites when mirror has been seen on Day 5
     var currentImg = null;
     if (this.useElderlySprite && typeof elderlySprites !== "undefined") {
-      // Elderly sprites have no back-view — fall back to normal Back sprites for "up"
-      if (this.direction === "up") {
-        if (typeof playerSprites !== "undefined" && playerSprites.up) {
-          currentImg = playerSprites.up[this.animFrame];
-        }
-      } else {
-        var elderlyDir = elderlySprites[this.direction];
-        if (elderlyDir) currentImg = elderlyDir[this.animFrame];
-      }
+      var elderlyDir = elderlySprites[this.direction];
+      if (elderlyDir) currentImg = elderlyDir[this.animFrame];
     } else if (typeof playerSprites !== "undefined" && playerSprites[this.direction]) {
       currentImg = playerSprites[this.direction][this.animFrame];
     }
@@ -74,10 +67,6 @@ class Player {
         noTint();
       }
 
-      // Day 5 elderly "up" fallback: apply sepia tint to the back sprite
-      if (this.useElderlySprite && this.direction === "up") {
-        tint(215, 185, 135);
-      }
 
       // Occasional flicker at low clarity
       var flickerChance = map(clarityRatio, 0.7, 0, 0, 0.15);

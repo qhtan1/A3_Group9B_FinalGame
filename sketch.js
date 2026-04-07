@@ -29,11 +29,12 @@ let elderlySprites = {
   down: [],
   left: [],
   right: [],
+  up: [],
 };
 
 // --- Loading progress ---
 let _loadedCount = 0;
-const _totalAssets = 46; // total loadImage() calls across all loops
+const _totalAssets = 49; // total loadImage() calls across all loops
 
 function _onAssetLoad() {
   _loadedCount++;
@@ -419,6 +420,7 @@ function preload() {
     elderlySprites.down.push( loadImage(`assets/OldFront${i}.jpg`, _onAssetLoad, _onAssetLoad));
     elderlySprites.left.push( loadImage(`assets/OldLeft${i}.jpg`,  _onAssetLoad, _onAssetLoad));
     elderlySprites.right.push(loadImage(`assets/OldRight${i}.jpg`, _onAssetLoad, _onAssetLoad));
+    elderlySprites.up.push(   loadImage(`assets/OldBack${i}.png`,  _onAssetLoad, _onAssetLoad));
   }
 }
 
