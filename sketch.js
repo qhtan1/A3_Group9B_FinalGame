@@ -1287,7 +1287,9 @@ function updateDialogueForStep(step) {
     }
     if (step === 5) {
       npcName.innerText = "Partner";
-      uiText.innerText  = "Is there anything in the news?";
+      uiText.innerText  = "You didn't forget, did you?";
+      var _p5snd = document.getElementById("day5-partner-sound");
+      if (_p5snd) { _p5snd.currentTime = 0; _p5snd.play(); }
     }
     if (step === 6) {
       npcName.innerText = "System";
