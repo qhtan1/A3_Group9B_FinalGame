@@ -1241,6 +1241,8 @@ function updateDialogueForStep(step) {
     if (step === 5) {
       npcName.innerText = "Partner";
       uiText.innerText = "How are you feeling today?";
+      var _d1nsnd = document.getElementById("day1-neighbour-sound");
+      if (_d1nsnd) { _d1nsnd.currentTime = 0; _d1nsnd.play(); }
     }
     if (step === 6) {
       npcName.innerText = "System";
@@ -1249,8 +1251,6 @@ function updateDialogueForStep(step) {
     if (step === 8) {
       npcName.innerText = "Neighbor";
       uiText.innerText = "Good morning.";
-      var _d1nsnd = document.getElementById("day1-neighbour-sound");
-      if (_d1nsnd) { _d1nsnd.currentTime = 0; _d1nsnd.play(); }
     }
     if (step === 9) {
       npcName.innerText = "System";
