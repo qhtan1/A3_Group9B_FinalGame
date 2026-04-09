@@ -404,7 +404,7 @@ function preload() {
   uiImages.day3[9] = loadImage("assets/ui_door204_day3.png", _onAssetLoad, _onAssetLoad);
 
   // --- Day 5 图片 ---
-  uiImages.day5[0] = loadImage("assets/ui_clock_day3.png",   _onAssetLoad, _onAssetLoad);
+  uiImages.day5[0] = loadImage("assets/ui_clock_day5.png",   _onAssetLoad, _onAssetLoad);
   uiImages.day5[1] = loadImage("assets/ui_mirror_day5.png",  _onAssetLoad, _onAssetLoad);
   uiImages.day5[3] = loadImage("assets/ui_tea_day3.png",     _onAssetLoad, _onAssetLoad);
   uiImages.day5[5] = loadImage("assets/ui_partner.png",      _onAssetLoad, _onAssetLoad);
