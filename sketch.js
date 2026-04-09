@@ -1270,6 +1270,8 @@ function updateDialogueForStep(step) {
     if (step === 5) {
       npcName.innerText = "Partner";
       uiText.innerText = "Is there anything in the news?";
+      var _d3psnd = document.getElementById("day3-partner-sound");
+      if (_d3psnd) { _d3psnd.currentTime = 0; _d3psnd.play(); }
     }
     if (step === 6) {
       npcName.innerText = "System";
