@@ -1251,6 +1251,8 @@ function updateDialogueForStep(step) {
     if (step === 8) {
       npcName.innerText = "Neighbor";
       uiText.innerText = "Good morning.";
+      var _d1nb = document.getElementById("day1-neighbour-step8-sound");
+      if (_d1nb) { _d1nb.currentTime = 0; _d1nb.play(); }
     }
     if (step === 9) {
       npcName.innerText = "System";
