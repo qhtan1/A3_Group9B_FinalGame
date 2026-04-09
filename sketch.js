@@ -75,6 +75,7 @@ function adminJumpToStep(step) {
   player.y = stepPlayerPos[step].y;
   gameState = "EXPLORE";
   isWaitingForObservationChoice = false;
+  _observationJustAnswered = false;
   isDistorted = false;
 
   const modal = document.getElementById("observation-modal");
@@ -98,6 +99,7 @@ function adminJumpToDay(day) {
   attentionSystem.reset();
   isDistorted = false;
   isWaitingForObservationChoice = false;
+  _observationJustAnswered = false;
 
   // Reset Day 5 flags
   day5MirrorDone          = false;
@@ -126,6 +128,7 @@ function adminJumpToDay(day) {
 // --- Day 3 特殊状态变量 ---
 let isDistorted = false;
 let isWaitingForObservationChoice = false;
+let _observationJustAnswered = false; // blocks Space from double-advancing after obs answer
 
 // --- Game Over animation state ---
 let gameOverAlpha = 0;
@@ -230,9 +233,11 @@ function handleObservationChoice(answer) {
 
   attentionSystem.dismissObservationUI();
   isWaitingForObservationChoice = false;
+  _observationJustAnswered = true; // lock Space from triggering a double processSequence
 
   // Continue to next sequence step after a brief delay
   setTimeout(() => {
+    _observationJustAnswered = false;
     processSequence();
   }, 1000);
 }
@@ -959,8 +964,10 @@ function keyPressed() {
       return;
     }
 
-    // Normal space key to close
-    if (keyCode === 32) {
+    // Normal space key to close — blocked if observation was just answered
+    // (prevents double-advance: obs answer schedules processSequence in 1s,
+    //  and player pressing Space would trigger a second call immediately)
+    if (keyCode === 32 && !_observationJustAnswered) {
       processSequence();
     }
   }
@@ -1394,6 +1401,7 @@ function handleGameOver(_reason) {
   player.velocityX = 0;
   player.velocityY = 0;
   isWaitingForObservationChoice = false;
+  _observationJustAnswered = false;
   attentionSystem.dismissObservationUI();
   setMusicDistortionLevel(3); // game-over collapse effect
 }
@@ -1469,6 +1477,7 @@ function restartGame() {
   _alarmEl.pause(); _alarmEl.currentTime = 0; // stop alarm on restart
   isDistorted = false;
   isWaitingForObservationChoice = false;
+  _observationJustAnswered = false;
 
   document.getElementById("day-display").innerText = "Day " + retryDay;
   document.getElementById("npc-name").innerText = "System";
