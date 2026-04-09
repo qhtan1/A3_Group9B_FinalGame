@@ -759,7 +759,7 @@ function drawAdminOverlay() {
   fill(255, 220, 100);
   textAlign(LEFT, TOP);
   textSize(6);
-  text("[ prev step   ] next step   1 Day1   3 Day3   5 Day5", 4, 158);
+  text("[ prev step   ] next step   1 Day1   3 Day3   5 Day5   H Happy   B Bad", 4, 158);
 }
 
 function keyPressed() {
@@ -829,7 +829,7 @@ function keyPressed() {
     document.getElementById("npc-name").innerText = "[ADMIN]";
     document.getElementById("dialogue-text").innerText =
       adminMode
-        ? "Admin mode ON — [ prev step, ] next step, 1=Day1, 3=Day3, 5=Day5"
+        ? "Admin mode ON — [ prev step, ] next step, 1=Day1, 3=Day3, 5=Day5, H=HappyEnd, B=BadEnd"
         : "Admin mode OFF";
     return;
   }
@@ -859,6 +859,16 @@ function keyPressed() {
     // 5 = jump to Day 5
     if (keyCode === 53 && gameState !== "INTERACT") {
       adminJumpToDay(5);
+      return;
+    }
+    // H = trigger happy ending (Ending A)
+    if (keyCode === 72) {
+      startEndingA();
+      return;
+    }
+    // B = trigger bad ending (Ending B)
+    if (keyCode === 66) {
+      startEndingB();
       return;
     }
   }
