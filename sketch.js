@@ -410,7 +410,7 @@ function preload() {
   uiImages.day5[5] = loadImage("assets/ui_partner.png",      _onAssetLoad, _onAssetLoad);
   // day5[6] is drawn as messy text — no image needed
   uiImages.day5[8] = loadImage("assets/ui_neighbor.png",     _onAssetLoad, _onAssetLoad);
-  uiImages.day5[9] = loadImage("assets/ui_door204_day3.png", _onAssetLoad, _onAssetLoad);
+  uiImages.day5[9] = loadImage("assets/ui_door204_day5.png", _onAssetLoad, _onAssetLoad);
 
   // 🚨 注意这里的后缀全部改成了大写 .PNG 🚨
   for (let i = 1; i <= 3; i++) {
