@@ -1280,6 +1280,8 @@ function updateDialogueForStep(step) {
     if (step === 8) {
       npcName.innerText = "Neighbor";
       uiText.innerText = "Your apartment has always been 204.";
+      var _d3nsnd = document.getElementById("day3-neighbour-sound");
+      if (_d3nsnd) { _d3nsnd.currentTime = 0; _d3nsnd.play(); }
     }
     if (step === 9) {
       npcName.innerText = "System";
