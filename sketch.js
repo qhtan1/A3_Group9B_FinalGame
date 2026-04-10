@@ -1713,6 +1713,11 @@ function startFamilyScene() {
   document.getElementById("timer-panel").style.visibility     = "hidden";
   document.getElementById("npc-name").innerText              = "";
   document.getElementById("dialogue-text").innerText         = "";
+
+  // Play Ending.mp3 and apply heavy distortion for family scene
+  var _endingSnd = document.getElementById("ending-sound");
+  if (_endingSnd) { _endingSnd.currentTime = 0; _endingSnd.play(); }
+  setMusicDistortionLevel(3);
 }
 
 /**
@@ -1828,6 +1833,9 @@ function startEndingA() {
   endingStartTime = millis();
   gameState       = "ENDING_A";
   setMusicDistortionLevel(0); // music clears / stabilises
+  // Stop the family-scene ending track
+  var _endingSnd = document.getElementById("ending-sound");
+  if (_endingSnd) { _endingSnd.pause(); _endingSnd.currentTime = 0; }
 }
 
 /**
