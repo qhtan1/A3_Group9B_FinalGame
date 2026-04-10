@@ -1714,9 +1714,7 @@ function startFamilyScene() {
   document.getElementById("npc-name").innerText              = "";
   document.getElementById("dialogue-text").innerText         = "";
 
-  // Play Ending.mp3 and apply heavy distortion for family scene
-  var _endingSnd = document.getElementById("ending-sound");
-  if (_endingSnd) { _endingSnd.currentTime = 0; _endingSnd.play(); }
+  // Apply heavy distortion for family scene
   setMusicDistortionLevel(3);
 }
 
@@ -1740,40 +1738,69 @@ function drawFamilyScene() {
 
   switch (familyScenePhase) {
     case 0: // Initial pause — dark screen
-      if (elapsed > 900) { familyScenePhase = 1; familySceneStartTime = now; }
+      if (elapsed > 900) {
+        familyScenePhase = 1; familySceneStartTime = now;
+        // Play audio for "You can't do anything right"
+        var _es1 = document.getElementById("ending-1-sound");
+        if (_es1) { _es1.currentTime = 0; _es1.play(); }
+      }
       break;
 
     case 1: // Heard — line 1
       _drawHeardText(FAMILY_HEARD[0], 1);
-      if (elapsed > 2600) { familyScenePhase = 2; familySceneStartTime = now; }
+      if (elapsed > 2600) {
+        familyScenePhase = 2; familySceneStartTime = now;
+        // Show response in dialogue panel
+        document.getElementById("dialogue-text").innerText = FAMILY_SUBTITLE[0];
+      }
       break;
 
     case 2: // Subtitle — line 1
       _drawHeardText(FAMILY_HEARD[0], 0.25);
-      _drawSubtitleText(FAMILY_SUBTITLE[0]);
-      if (elapsed > 2200) { familyScenePhase = 3; familySceneStartTime = now; }
+      if (elapsed > 2200) {
+        familyScenePhase = 3; familySceneStartTime = now;
+        document.getElementById("dialogue-text").innerText = "";
+        // Play audio for "You don't remember us"
+        var _es2 = document.getElementById("ending-2-sound");
+        if (_es2) { _es2.currentTime = 0; _es2.play(); }
+      }
       break;
 
     case 3: // Heard — line 2
       _drawHeardText(FAMILY_HEARD[1], 1);
-      if (elapsed > 2600) { familyScenePhase = 4; familySceneStartTime = now; }
+      if (elapsed > 2600) {
+        familyScenePhase = 4; familySceneStartTime = now;
+        // Show response in dialogue panel
+        document.getElementById("dialogue-text").innerText = FAMILY_SUBTITLE[1];
+      }
       break;
 
     case 4: // Subtitle — line 2
       _drawHeardText(FAMILY_HEARD[1], 0.25);
-      _drawSubtitleText(FAMILY_SUBTITLE[1]);
-      if (elapsed > 2200) { familyScenePhase = 5; familySceneStartTime = now; }
+      if (elapsed > 2200) {
+        familyScenePhase = 5; familySceneStartTime = now;
+        document.getElementById("dialogue-text").innerText = "";
+        // Play audio for "You're a burden"
+        var _es3 = document.getElementById("ending-3-sound");
+        if (_es3) { _es3.currentTime = 0; _es3.play(); }
+      }
       break;
 
     case 5: // Heard — line 3
       _drawHeardText(FAMILY_HEARD[2], 1);
-      if (elapsed > 2600) { familyScenePhase = 6; familySceneStartTime = now; }
+      if (elapsed > 2600) {
+        familyScenePhase = 6; familySceneStartTime = now;
+        // Show response in dialogue panel
+        document.getElementById("dialogue-text").innerText = FAMILY_SUBTITLE[2];
+      }
       break;
 
     case 6: // Subtitle — line 3
       _drawHeardText(FAMILY_HEARD[2], 0.25);
-      _drawSubtitleText(FAMILY_SUBTITLE[2]);
-      if (elapsed > 2200) { familyScenePhase = 7; familySceneStartTime = now; }
+      if (elapsed > 2200) {
+        familyScenePhase = 7; familySceneStartTime = now;
+        document.getElementById("dialogue-text").innerText = "";
+      }
       break;
 
     case 7: // Choice
@@ -1833,9 +1860,11 @@ function startEndingA() {
   endingStartTime = millis();
   gameState       = "ENDING_A";
   setMusicDistortionLevel(0); // music clears / stabilises
-  // Stop the family-scene ending track
-  var _endingSnd = document.getElementById("ending-sound");
-  if (_endingSnd) { _endingSnd.pause(); _endingSnd.currentTime = 0; }
+  // Stop family-scene ending tracks
+  ["ending-1-sound","ending-2-sound","ending-3-sound"].forEach(function(id) {
+    var s = document.getElementById(id);
+    if (s) { s.pause(); s.currentTime = 0; }
+  });
 }
 
 /**
