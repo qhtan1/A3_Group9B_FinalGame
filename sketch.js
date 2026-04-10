@@ -759,7 +759,7 @@ function drawAdminOverlay() {
   fill(255, 220, 100);
   textAlign(LEFT, TOP);
   textSize(6);
-  text("[ prev   ] next   1 Day1   3 Day3   5 Day5   E Scene   H Happy   B Bad", 4, 158);
+  text("[ prev   ] next   1 Day1   3 Day3   5 Day5   7 Scene   H Happy   B Bad", 4, 158);
 }
 
 function keyPressed() {
@@ -829,7 +829,7 @@ function keyPressed() {
     document.getElementById("npc-name").innerText = "[ADMIN]";
     document.getElementById("dialogue-text").innerText =
       adminMode
-        ? "Admin mode ON — [ prev, ] next, 1=Day1, 3=Day3, 5=Day5, E=FamilyScene, H=HappyEnd, B=BadEnd"
+        ? "Admin mode ON — [ prev, ] next, 1=Day1, 3=Day3, 5=Day5, 7=FamilyScene, H=HappyEnd, B=BadEnd"
         : "Admin mode OFF";
     return;
   }
@@ -861,8 +861,8 @@ function keyPressed() {
       adminJumpToDay(5);
       return;
     }
-    // E = jump straight to family scene (post Day 5)
-    if (keyCode === 69) {
+    // 7 = jump straight to family scene (post Day 5)
+    if (keyCode === 55) {
       startFamilyScene();
       return;
     }
