@@ -1,61 +1,48 @@
 # Before I Forget
 
-**GBDA 302 — Midterm Game Project**
-
-## Authors (Group 9B)
-
-- Kiki Tan
-- Tracey Chen
-- Rini Lu
-- Lynette Shen
-- Annora Zhu
-
-## Description
-
-*Before I Forget* is a narrative-driven top-down exploration game built with p5.js. Players step into the daily routine of an elderly character experiencing the gradual onset of memory loss.
-
-The game follows a repeating morning routine across three days — waking up, checking the mirror, making tea, reading the newspaper, talking to a partner, and greeting a neighbor. As days progress, familiar objects and interactions begin to distort: clock digits blur, tea labels become unreadable, newspaper headlines scramble, and the door number fades. By Day 5, the world has become deeply unreliable — time skips, movements misfire, and objects give wrong responses.
-
-The game communicates cognitive decline through environmental storytelling and systemic distortion rather than explicit explanation, culminating in a branching ending that asks the player to make a final emotional choice.
+**GBDA 302 — A3 Final Game (Group Project)**
 
 🎮 **[Play the game here](https://qhtan1.github.io/A2_Group9B_MidTermGame/)**
 
 ---
 
+## Group Members (Group 9B)
+
+| Name         | WatID   | Student # |
+| ------------ | ------- | --------- |
+| Kiki Tan     | qhtan   | 20878699  |
+| Tracey Chen  | t44chen | 21057118  |
+| Rini Lu      | r28lu   | 21091404  |
+| Lynette Shen | l34shen | 21068630  |
+| Annora Zhu   | y65zhu  | 21057605  |
+
+---
+
+## Description
+
+_Before I Forget_ is a narrative-driven top-down exploration game built with **p5.js** that fosters empathy for people living with **dementia and age-related cognitive decline**. The player steps into the daily morning routine of an elderly character across three playable days. As days progress, familiar objects, dialogue, time, controls, and even the player's own reflection begin to distort — communicating cognitive decline through systemic gameplay breakdown rather than explicit explanation.
+
+The game culminates in a pre-ending family cutscene with mismatched audio and subtitles, followed by a branching final choice that produces one of two emotional endings.
+
+### Three Distinct Game Mechanics
+
+The final game implements **at least three distinct, integrated mechanics**, with new ones developed since the mid-term:
+
+1. **Routine Checklist + Clarity System** _(carried from mid-term, refined)_ — seven morning tasks tracked on-screen, with a Clarity HUD that decays as distortions accumulate.
+2. **Daily Distortion System** _(expanded)_ — escalating environmental, control, time, sprite, and dialogue distortions that scale across Day 1 → Day 3 → Day 5.
+3. **Coin (Change) Collection Mechanic** _(NEW for A3)_ — the character must gather a small number of coins hidden inside interaction scenes before being allowed to leave the apartment to "buy eggs." Each day the coins become smaller, more transparent, and pushed into the corners of the frame, mirroring the increasing difficulty of holding onto small details.
+
+---
+
 ## Gameplay Overview
 
-The game spans **three playable days**, each sharing the same morning routine but diverging in clarity, reliability, and emotional tone.
+| Day       | Coins Required                                     | Experience                                                                                                                                           |
+| --------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Day 1** | 3 (16 px, full opacity, anywhere in scene)         | Clear and familiar. Routine feels warm and grounded.                                                                                                 |
+| **Day 3** | 4 (12 px, ~43% opacity, hidden in corners)         | Subtle distortions begin — scrambled labels, altered dialogue, fading details, "Something is wrong / Looks normal" observation prompts.              |
+| **Day 5** | 5 (8 px, ~22% opacity, tucked against frame edges) | Severe disorientation. Time skips, control misfires, sprite ages after mirror, wrong object feedback, stair gate, family cutscene, branching ending. |
 
-| Day | Experience |
-|-----|------------|
-| **Day 1** | Everything is clear and familiar. The routine feels warm and grounded. |
-| **Day 3** | Subtle distortions begin — scrambled labels, altered dialogue, fading details. |
-| **Day 5** | Severe disorientation. Time skips, controls misfire, objects give wrong feedback. A time limit is introduced. Ends in a branching final scene with two possible endings. |
-
----
-
-## Core Game Mechanics
-
-### Routine-Based Progression
-Players complete a sequence of seven morning tasks tracked by an on-screen **routine checklist**. The checklist creates familiarity so that later distortions feel disorienting and emotionally impactful.
-
-### Environmental Distortion
-In later days, the same environment contains subtle and then severe errors: scrambled text, incorrect object labels, unreliable dialogue, and altered interactions. These distortions simulate the confusion of cognitive decline.
-
-### Clarity System
-A **Clarity indicator** on the HUD reflects the player's current mental state. Clarity decreases as distortions increase. In Day 5, standing still for 3 seconds allows a brief moment of refocus — a dialogue prompt reads *"Wait… I need a second."* — and restores +1 Clarity.
-
-### Timer System
-A **clock timer** starts at 7:00 AM and tracks the player's progress through the morning. In Day 5, time no longer advances normally — it skips forward erratically (e.g. 7:05 → 7:11 → 7:18 → 7:23), reinforcing the loss of temporal grounding. The player must complete a minimum number of routine tasks before reaching the stairs, or the game ends early.
-
-### Music Toggle
-Background music can be toggled on and off using the ♪ button.
-
----
-
-## Routine Checklist
-
-The following tasks must be completed each morning, in order:
+### Routine Checklist
 
 1. Check alarm
 2. Look at mirror
@@ -65,165 +52,93 @@ The following tasks must be completed each morning, in order:
 6. Check door number
 7. Greet neighbor
 
----
+### Coin Dialogue (per day)
 
-## Day 5 — Distortion Details
+- **Day 1:** _"I might need this." → "Better bring some change." → "That should be enough."_ → goal: _"I can grab some groceries."_
+- **Day 3:** _"Did I already take one?" → "Was this here before…?" → "Why am I collecting these again?" → "This should be enough… I hope."_ → goal: _"It feels important."_
+- **Day 5:** _"I need more." → "Still not enough." → "Why are there so many…?" → "Did I already check here?" → "I need them."_ (no goal line — just unlock)
 
-Day 5 introduces compounding breakdowns across all game systems:
+### Day 5 Distortions
 
-### Sprite Change
-After looking in the mirror, the player character's sprite switches to an aged appearance, reflecting the character's distorted self-perception.
+- **Sprite swap** to elderly back/front sprites after the mirror interaction.
+- **Time skipping** — the clock jumps in irregular intervals.
+- **Control misfires** — WASD inputs occasionally produce the wrong direction.
+- **Wrong object feedback** — alarm replies _"I should make tea"_, tea replies _"Why am I here?"_.
+- **Stair gate** — leaving early triggers a game over.
+- **Clarity refocus** — standing still for 3 seconds restores +1 Clarity.
 
-### Time Skipping
-The clock no longer advances normally. Time jumps forward in irregular intervals, creating a sense of lost time and urgency.
+### Family Cutscene + Endings
 
-### Control Misfires
-Movement inputs occasionally produce the wrong direction — pressing W may move the character right; pressing A may move them up. This mechanic directly puts the player inside the character's disorientation.
+A family member enters and speaks. What is **heard** and what the **subtitles** show are different (with a 1–2 s delay), each line backed by its own audio clip (`Ending_1.mp3`, `Ending_2.mp3`, `Ending_3.mp3`). Background music distorts to level 3.
 
-### Wrong Object Feedback
-Interacting with objects returns incorrect responses:
-- Alarm clock → *"I should make tea."*
-- Tea canister → *"Why am I here?"*
+| Heard                            | Subtitles           |
+| -------------------------------- | ------------------- |
+| _"You can't do anything right."_ | _"We're here."_     |
+| _"You don't remember us."_       | _"Take your time."_ |
+| _"You're a burden."_             | _"It's okay."_      |
 
-### Stair Gate (Time Limit)
-A minimum number of routine tasks must be completed before the player can leave via the stairs. Attempting to leave too early triggers a **game over**.
-
----
-
-## Endings
-
-Before the ending, a short cutscene plays: a family member enters the room and speaks. What the player *hears* and what the *subtitles show* are different, with a 1–2 second delay between them.
-
-| | Heard | Subtitles (delayed) |
-|--|-------|---------------------|
-| Line 1 | *"You can't do anything right."* | *"We're here."* |
-| Line 2 | *"You don't remember us."* | *"Take your time."* |
-| Line 3 | *"You're a burden."* | *"It's okay."* |
-
-The player is then given a choice.
-
-### Ending A — Acceptance
-**Condition:** Choose to hold the hand.
-
-The screen stabilizes. The character's appearance softens. Text fades in slowly:
-
-> *Before I forget… Thank you for staying.*
-
-### Ending B — Isolation
-**Condition:** Choose to pull away.
-
-The screen overexposes. The character blurs. Text fragments and disappears:
-
-> *Bef— For— Forget*
->
-> *…*
+- **Ending A — Acceptance** (hold the hand): screen stabilizes, music returns to normal. _"Before I forget… Thank you for staying."_
+- **Ending B — Isolation** (pull away): screen overexposes, distortion remains. _"Bef— For— Forget …"_
 
 ---
 
-## Game World
+## Setup and Interaction Instructions
 
-### Bedroom
-- Wake up
-- Check the alarm clock
-- Look in the mirror *(Day 5: triggers sprite change)*
-
-### Kitchen
-- Locate the tea canister
-- Brew tea
-
-### Living Room
-- Read the newspaper
-- Talk to your partner
-
-### Outside (Hallway)
-- Check the door plate
-- Greet the neighbor
-- *Day 5: Stairs require minimum routine completion before exit*
-
----
-
-## Controls
-
-| Key / Input | Action |
-|-------------|--------|
-| W / ↑ | Move up *(may misfire on Day 5)* |
-| S / ↓ | Move down *(may misfire on Day 5)* |
-| A / ← | Move left *(may misfire on Day 5)* |
-| D / → | Move right *(may misfire on Day 5)* |
-| E | Interact with objects marked with **!** |
-| Space | Close popup / advance dialogue |
-| Enter | Start game from title screen |
-| ♪ (button) | Toggle background music |
-| Stand still (3 sec) | *Day 5 only:* Brief refocus — Clarity +1 |
-
----
-
-## Technical Implementation
-
-- **Engine:** p5.js
-- **Architecture:** Modular class-based design with separate files for Player, WorldLevel, and game systems
-- **Level Data:** JSON-driven configuration defining dialogue, object labels, and distortion parameters per day
-- **Sprite Animation:** 3-frame walking animation in four directions; Day 5 includes a mid-session sprite sheet swap
-- **Collision Detection:** AABB (Axis-Aligned Bounding Box) system for obstacles and room boundaries
-- **Room Transitions:** Sequential interaction events advance the player through the routine
-- **Day Progression:** Completing each day's routine triggers a transition to the next, with escalating distortion parameters
-- **Branching Endings:** Final scene uses a choice prompt to determine one of two outcome states with distinct visual and text effects
-
----
-
-## Setup and Play Instructions
-
-1. Open the game via the [GitHub Pages link](https://qhtan1.github.io/A2_Group9B_MidTermGame/).
+1. Open the [GitHub Pages link](https://qhtan1.github.io/A3_Group9B_MidTermGame/) in **Google Chrome** (latest version).
 2. Press **Start** or **Enter** on the title screen.
-3. Use **WASD** or **Arrow Keys** to move.
-4. Approach objects marked with **!** and press **E** to interact.
-5. Press **Space** to close dialogue popups or advance text.
-6. Complete all routine tasks to progress through each day.
-7. On Day 5, complete enough tasks before reaching the stairs — or face an early ending.
-8. Make your final choice to determine the ending.
+3. Use **WASD** or **Arrow Keys** to move (may misfire on Day 5).
+4. Approach objects marked with **!** and press **E** to open an interaction popup.
+5. **Click coins** with the mouse inside popup scenes to collect them — watch the "Change" panel.
+6. Press **Space** to close popups / advance dialogue.
+7. On observation prompts, press **1** for _"Something is wrong"_ or **2** for _"Looks normal"_.
+8. Use the **♪** button to toggle background music.
+9. On Day 5, complete enough routine tasks **and** collect 5 coins before reaching the stairs, or face an early ending.
+10. At the end of Day 5, choose to **hold the hand** or **pull away** to determine your ending.
 
 ---
 
-## Iteration Notes
+## Iteration Notes (Post-Playtest)
 
-### Post-Playtest Changes (Midterm)
+Three concrete changes were made between in-class playtesting (Mar 26) and final submission, based on peer/instructor feedback:
 
-- **Added explicit gameplay systems.** Early prototypes focused purely on environmental storytelling. After playtesting, a routine checklist, timer, and Clarity indicator were introduced to give players clearer goals and feedback.
-- **Improved spatial readability.** Room layouts were simplified so key objects (clock, mirror, tea canister, newspaper) are easier to locate.
+1. **Added a goal-driven coin (change) economy.** Playtesters reported that the routine alone did not give them enough moment-to-moment agency or a clear reason to look closely at each interaction scene. We added a per-day coin collection mechanic with shrinking, fading, corner-tucked coins to simulate the increasing effort of noticing small details, plus a hard exit-lock on the stairs until the daily quota is met.
+2. **Replaced placeholder newspaper art with three day-specific images** (`Day 1`, `Day 3`, `Day 5`), and replaced the hand-drawn Day 5 letter fallback with a real image asset. This addressed feedback that the newspaper interaction felt visually inconsistent with the other popup scenes.
+3. **Rebuilt the family cutscene audio** — replaced the single ambient track with three per-line clips (`Ending_1/2/3.mp3`) tied to each "heard" line, applied level-3 music distortion during the scene, and moved subtitle responses from a canvas overlay into the dialogue panel for consistency. Playtesters had said the original cutscene felt flat and the audio/subtitle disconnect was hard to read.
 
-### Post-Showcase Additions (Final)
-
-- **Day 5 implemented** with compounding distortion across movement, time, objects, and visuals.
-- **Two endings added** — Acceptance (Ending A) and Isolation (Ending B) — triggered by a final player choice.
-- **Pre-ending cutscene** introduced featuring a mismatched audio/subtitle scene to reflect the character's perceptual disconnect.
-- **Stair gate mechanic** adds consequence to incomplete routines on Day 5.
-- **Sprite sheet swap** after mirror interaction on Day 5 visually marks the character's altered self-perception.
-- **Clarity refocus mechanic** rewards stillness with a brief moment of mental clarity on Day 5.
-
-### Planned Future Improvements
-
-- Further research into dementia and cognitive decline to inspire additional grounded mechanics.
-- Expanded environmental inconsistencies inspired by *The Exit 8*, *P.T.*, and *Visage (Chapter 2)*.
-- Additional sound design and ambient effects to reinforce emotional tone.
+Additional fixes shipped post-playtest: Day 5 mirror interaction restored (race condition fix), elderly back-facing sprite case-sensitivity bug, Day 3 coins clickable through observation popups, Day 1/Day 3 partner & neighbour voice lines, admin debug shortcuts (` ` ` to toggle; 1/3/5 jump to days, 7 = family scene, H = Ending A, B = Ending B).
 
 ---
 
 ## Assets
 
-All pixel art backgrounds, character sprites, UI popup images, and interactive scene illustrations were created specifically for this project. Assets are organized in the `assets/` folder.
+All pixel-art backgrounds, character sprites, UI popup images, and interactive scene illustrations were created specifically for this project using **Google Gemini** (image generation, prompts documented in `Process_and_Decision_Documentation.pdf`, Appendix B). Backgrounds, the player sprite sheet, the elderly sprite sheet (`OldBack1–3.PNG`, `OldFront1–3.PNG`, etc.), and all popup scene art were generated by the team and selected/refined by hand. Voice lines (`Day1_Partner.mp3`, `Day1_neighbour.mp3`, `Day3_Partner.mp3`, `Day3_neighbour.mp3`, `Ending_1.mp3`, `Ending_2.mp3`, `Ending_3.mp3`) were recorded by team members.
+
+**Non-original assets:**
+
+- Background music: _"Cozy Lofi Music"_ by Tunetank (royalty-free), file `tunetank-cozy-lofi-music-409359.mp3` [1].
+- Alarm SFX: `alarm.mp3` (royalty-free).
+- p5.js library v1.x [2], included locally in `libraries/`.
+
+All non-original assets are royalty-free and used in compliance with their licenses.
 
 ---
 
 ## GenAI Disclosure
 
-Generative AI tools were used during development to assist with code debugging, gameplay logic exploration, and art asset generation.
-
-All gameplay mechanics, narrative design, visual direction, and final implementation decisions were determined and reviewed by the team.
-
-GenAI outputs were treated as development assistance rather than final solutions, and all generated material was modified or integrated through human decision-making.
+Generative AI tools (Google Gemini for image/asset generation; Claude Sonnet 4.6 via the Cowork desktop app for code debugging, audio integration, and the coin system implementation; ChatGPT for early code scaffolding) were used during development. Full per-exchange transcripts, prompts, dates, and human decision points are documented in `Process_and_Decision_Documentation.pdf`. All gameplay mechanics, narrative design, visual direction, and final implementation decisions were made and reviewed by the team. No AI-generated code or art was used without human review, modification, and integration.
 
 ---
 
 ## References
 
-World Health Organization. 2023. *Dementia*. World Health Organization. https://www.who.int/news-room/fact-sheets/detail/dementia
+[1] Tunetank. n.d. _Cozy Lofi Music (Track 409359)_. Tunetank. https://tunetank.com/
+
+[2] L. McCarthy and the Processing Foundation. 2024. _p5.js_ (version 1.x) [JavaScript library]. https://p5js.org/
+
+[3] World Health Organization. 2023. _Dementia_. World Health Organization. https://www.who.int/news-room/fact-sheets/detail/dementia
+
+[4] KOTAKE CREATE. 2023. _The Exit 8_ [Video game]. KOTAKE CREATE.
+
+[5] Kojima Productions. 2014. _P.T._ [Video game]. Konami.
+
+[6] SadSquare Studio. 2020. _Visage_ [Video game]. SadSquare Studio.
