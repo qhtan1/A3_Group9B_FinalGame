@@ -1063,7 +1063,23 @@ function keyPressed() {
 function mousePressed() {
   if (mouseButton !== LEFT) return;
   if (gameState !== "INTERACT") return;
-  if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) return;
+
+  // p5.js computes mouseX/mouseY using canvas.scrollWidth (the CSS pixel size)
+  // as the scale factor. But when #main-container has a CSS transform applied
+  // by fitGameToScreen(), the canvas's actual rendered size differs from its
+  // CSS size, so the coordinates are wrong. Correct by comparing the real
+  // rendered rect width against scrollWidth.
+  let mx = mouseX, my = mouseY;
+  const _cvs = document.querySelector("#canvas-holder canvas");
+  if (_cvs) {
+    const _rect = _cvs.getBoundingClientRect();
+    if (_rect.width > 0 && _rect.height > 0) {
+      mx = mouseX * (_cvs.scrollWidth  / _rect.width);
+      my = mouseY * (_cvs.scrollHeight / _rect.height);
+    }
+  }
+
+  if (mx < 0 || mx > width || my < 0 || my > height) return;
 
   let cfg        = getCoinConfig(world.currentDay);
   let hitRadius  = cfg.size / 2 + 4;
@@ -1072,7 +1088,7 @@ function mousePressed() {
   for (let c of activeCoins) {
     if (c.collected) continue;
     let bob = sin(millis() * 0.004 + c.x * 0.05) * 2;
-    if (dist(mouseX, mouseY, c.x, c.y + bob) < hitRadius) {
+    if (dist(mx, my, c.x, c.y + bob) < hitRadius) {
       c.collected = true;
       coinCount++;
 
