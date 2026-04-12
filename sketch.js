@@ -34,7 +34,7 @@ let elderlySprites = {
 
 // --- Loading progress ---
 let _loadedCount = 0;
-const _totalAssets = 48; // total loadImage() calls across all loops
+const _totalAssets = 51; // total loadImage() calls across all loops
 
 function _onAssetLoad() {
   _loadedCount++;
@@ -84,6 +84,47 @@ function adminJumpToStep(step) {
   document.getElementById("npc-name").innerText = "[ADMIN]";
   document.getElementById("dialogue-text").innerText =
     `Jumped to step ${step} — ${world.currentRoom} (Day ${world.currentDay})`;
+
+  updateMapHighlight();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAP NAVIGATION
+// ─────────────────────────────────────────────────────────────────────────────
+
+const MAP_ROOM_SPAWNS = {
+  Bedroom:    { x: 150, y: 130 },
+  Kitchen:    { x: 160, y: 160 },
+  LivingRoom: { x: 155, y: 160 },
+  Outside:    { x: 160, y: 120 },
+};
+
+function navigateToRoom(room) {
+  if (gameState !== "EXPLORE") return;
+  let spawn = MAP_ROOM_SPAWNS[room];
+  if (!spawn) return;
+
+  world.currentRoom = room;
+  player.x = spawn.x;
+  player.y = spawn.y;
+
+  document.getElementById("npc-name").innerText     = "System";
+  document.getElementById("dialogue-text").innerText = "Use WASD or Arrows to explore.";
+
+  updateMapHighlight();
+}
+
+function updateMapHighlight() {
+  const zoneIds = {
+    Bedroom:    "zone-bedroom",
+    Kitchen:    "zone-kitchen",
+    LivingRoom: "zone-livingroom",
+    Outside:    "zone-outside",
+  };
+  for (let [room, id] of Object.entries(zoneIds)) {
+    let el = document.getElementById(id);
+    if (el) el.classList.toggle("map-active", room === world.currentRoom);
+  }
 }
 
 /**
@@ -100,6 +141,7 @@ function adminJumpToDay(day) {
   isDistorted = false;
   isWaitingForObservationChoice = false;
   _observationJustAnswered = false;
+  initDailyCoins(day); // resets coinCount, activeCoins, dailyCoinPlan, dailyCoinGoalReached
 
   // Reset Day 5 flags
   day5MirrorDone          = false;
@@ -119,6 +161,8 @@ function adminJumpToDay(day) {
 
   // Restore hidden panels for gameplay
   document.getElementById("checklist-panel").style.visibility = "visible";
+  document.getElementById("coin-panel").style.visibility      = "visible";
+  document.getElementById("map-panel").style.visibility       = "visible";
   document.getElementById("npc-name").innerText    = "[ADMIN]";
   document.getElementById("dialogue-text").innerText =
     `Jumped to Day ${day} \u2014 start of day`;
@@ -139,6 +183,13 @@ let dayStartPopupTime = 0;
 
 // ── Day 5 state ──────────────────────────────────────────────────────────────
 let day5MirrorDone = false;   // becomes true after player looks in mirror Day 5
+
+// ── Coin System ──────────────────────────────────────────────────────────────
+let coinImg              = null;  // loaded in preload()
+let coinCount            = 0;     // coins collected THIS day (resets each day)
+let activeCoins          = [];    // coins spawned for the currently-open popup
+let dailyCoinPlan        = {};    // sequenceStep → coin count for this day
+let dailyCoinGoalReached = false; // true once the day's required coins are found
 
 // Clarity pause mechanic (Day 3 / Day 5)
 let clarityPauseActive = false; // true while waiting for player to rest
@@ -291,7 +342,7 @@ const items = [
     step: 1,
     room: "Bedroom",
     x: 200,
-    y: 64,
+    y: 90,
     name: "Mirror",
     type: "popup",
     hint: "Press 'E' to look at mirror",
@@ -384,13 +435,14 @@ function preload() {
   bgImages.Kitchen   = loadImage("assets/bg_kitchen.png",    _onAssetLoad, _onAssetLoad);
   bgImages.LivingRoom= loadImage("assets/bg_livingroom.png", _onAssetLoad, _onAssetLoad);
   bgImages.Outside   = loadImage("assets/bg_outside.jpg",    _onAssetLoad, _onAssetLoad);
+  bgImages.EndingB   = loadImage("assets/IMG_9033.jpg",      _onAssetLoad, _onAssetLoad);
 
   // --- Day 1 图片 ---
   uiImages.day1[0] = loadImage("assets/ui_clock.png",    _onAssetLoad, _onAssetLoad);
   uiImages.day1[1] = loadImage("assets/ui_mirror.png",   _onAssetLoad, _onAssetLoad);
   uiImages.day1[3] = loadImage("assets/ui_tea.png",      _onAssetLoad, _onAssetLoad);
   uiImages.day1[5] = loadImage("assets/ui_partner.png",  _onAssetLoad, _onAssetLoad);
-  uiImages.day1[6] = loadImage("assets/ui_news.png",     _onAssetLoad, _onAssetLoad);
+  uiImages.day1[6] = loadImage("assets/Gemini_Generated_Image_fu2dgjfu2dgjfu2d.png", _onAssetLoad, _onAssetLoad);
   uiImages.day1[8] = loadImage("assets/ui_neighbor.png", _onAssetLoad, _onAssetLoad);
   uiImages.day1[9] = loadImage("assets/ui_door204.png",  _onAssetLoad, _onAssetLoad);
 
@@ -399,7 +451,7 @@ function preload() {
   uiImages.day3[1] = loadImage("assets/ui_mirror_day3.png",  _onAssetLoad, _onAssetLoad);
   uiImages.day3[3] = loadImage("assets/ui_tea_day3.png",     _onAssetLoad, _onAssetLoad);
   uiImages.day3[5] = loadImage("assets/ui_partner.png",      _onAssetLoad, _onAssetLoad);
-  uiImages.day3[6] = loadImage("assets/ui_news_day3.png",    _onAssetLoad, _onAssetLoad);
+  uiImages.day3[6] = loadImage("assets/Gemini_Generated_Image_wgq4kmwgq4kmwgq4.png", _onAssetLoad, _onAssetLoad);
   uiImages.day3[8] = loadImage("assets/ui_neighbor.png",     _onAssetLoad, _onAssetLoad);
   uiImages.day3[9] = loadImage("assets/ui_door204_day3.png", _onAssetLoad, _onAssetLoad);
 
@@ -408,7 +460,7 @@ function preload() {
   uiImages.day5[1] = loadImage("assets/ui_mirror_day5.png",  _onAssetLoad, _onAssetLoad);
   uiImages.day5[3] = loadImage("assets/ui_tea_day3.png",     _onAssetLoad, _onAssetLoad);
   uiImages.day5[5] = loadImage("assets/ui_partner.png",      _onAssetLoad, _onAssetLoad);
-  // day5[6] is drawn as messy text — no image needed
+  uiImages.day5[6] = loadImage("assets/IMG_9028.JPG",        _onAssetLoad, _onAssetLoad);
   uiImages.day5[8] = loadImage("assets/ui_neighbor.png",     _onAssetLoad, _onAssetLoad);
   uiImages.day5[9] = loadImage("assets/ui_door204_day5.png", _onAssetLoad, _onAssetLoad);
 
@@ -419,6 +471,8 @@ function preload() {
     playerSprites.left.push(loadImage(`assets/Left${i}.PNG`,   _onAssetLoad, _onAssetLoad));
     playerSprites.right.push(loadImage(`assets/Right${i}.PNG`, _onAssetLoad, _onAssetLoad));
   }
+
+  coinImg = loadImage("assets/coin.png", _onAssetLoad, _onAssetLoad);
 
   // Elderly sprites — Day 5 mirror swap
   for (let i = 1; i <= 3; i++) {
@@ -454,6 +508,9 @@ function setup() {
   timerSystem = new TimerSystem();
   attentionSystem = new AttentionSystem();
 
+  // Pre-plan coin placement for Day 1 and initialise the UI
+  initDailyCoins(1);
+  updateCoinUI();
 }
 
 function draw() {
@@ -646,11 +703,12 @@ function checkInteractions() {
 
   // Steps that are navigation-required (cannot skip to a door/exit).
   // Alarm (step 0): must interact before leaving the bedroom — all days.
-  // Mirror (step 1, Day 3 & 5): required so the door never overrides it.
+  // Mirror (step 1, all days): door at (160,75) is only ~41px from mirror at (200,90),
+  //   well inside the 45px interaction radius, so mirror must always win proximity.
   // Newspaper (step 6, Day 1 only): must read before leaving the living room.
   let stepIsRequired =
     world.sequenceStep === 0 ||
-    (world.sequenceStep === 1 && (world.currentDay === 3 || world.currentDay === 5)) ||
+    world.sequenceStep === 1 ||
     (world.sequenceStep === 6 && world.currentDay === 1);
 
   // If the current step is an optional popup, also check whether the next
@@ -902,6 +960,7 @@ function keyPressed() {
         }
 
         gameState = "INTERACT";
+        spawnCoinsForPopup();
 
         // Start timer on first interaction (alarm clock) and stop alarm sound
         if (world.sequenceStep === 0) {
@@ -919,12 +978,6 @@ function keyPressed() {
         if ((world.currentDay === 3 || world.currentDay === 5) && attentionSystem.triggerObservationUI(world.sequenceStep)) {
           isWaitingForObservationChoice = true;
         }
-        // Day 5 mirror: trigger elderly sprite swap
-        if (world.currentDay === 5 && world.sequenceStep === 1 && !day5MirrorDone) {
-          day5MirrorDone          = true;
-          player.useElderlySprite = true;
-        }
-
         // Play tea brewing sound at 2x gain via Web Audio API
         if (world.sequenceStep === 3) {
           var teaSound = document.getElementById("tea-sound");
@@ -958,6 +1011,17 @@ function keyPressed() {
 
         updateDialogueForStep(world.sequenceStep);
       } else {
+        // Coin-lock: must meet today's coin requirement before using the staircase.
+        if (activeTarget.step === 10 && activeTarget.type === "exit") {
+          let _coinCfg = getCoinConfig(world.currentDay);
+          if (coinCount < _coinCfg.required) {
+            document.getElementById("npc-name").innerText = "System";
+            document.getElementById("dialogue-text").innerText =
+              "I don\u2019t have enough change yet\u2026";
+            return;
+          }
+        }
+
         // If player skipped an optional popup and went straight to a door/exit,
         // silently advance the sequence to match the target's step first.
         while (world.sequenceStep < activeTarget.step) {
@@ -993,21 +1057,50 @@ function keyPressed() {
   }
 }
 
+/**
+ * Handle mouse clicks — used for coin collection during popup interactions.
+ */
+function mousePressed() {
+  if (mouseButton !== LEFT) return;
+  if (gameState !== "INTERACT") return;
+  if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) return;
+
+  let cfg        = getCoinConfig(world.currentDay);
+  let hitRadius  = cfg.size / 2 + 4;
+  let dayDialogue = COIN_DIALOGUES[world.currentDay] || COIN_DIALOGUES[5];
+
+  for (let c of activeCoins) {
+    if (c.collected) continue;
+    let bob = sin(millis() * 0.004 + c.x * 0.05) * 2;
+    if (dist(mouseX, mouseY, c.x, c.y + bob) < hitRadius) {
+      c.collected = true;
+      coinCount++;
+
+      let lineIdx = coinCount - 1;
+      if (lineIdx < dayDialogue.lines.length) {
+        document.getElementById("npc-name").innerText     = "System";
+        document.getElementById("dialogue-text").innerText = dayDialogue.lines[lineIdx];
+      }
+
+      if (coinCount >= cfg.required && !dailyCoinGoalReached) {
+        dailyCoinGoalReached = true;
+        if (dayDialogue.goalLine) {
+          setTimeout(() => {
+            document.getElementById("npc-name").innerText     = "System";
+            document.getElementById("dialogue-text").innerText = dayDialogue.goalLine;
+          }, 1500);
+        }
+      }
+
+      updateCoinUI();
+      break; // one coin per click
+    }
+  }
+}
+
 function drawUIPopup() {
   let dayKey = "day" + world.currentDay;
   let img = uiImages[dayKey][world.sequenceStep];
-
-  // Day 5 newspaper (step 6) uses hand-drawn messy text instead of an image
-  if (world.currentDay === 5 && world.sequenceStep === 6) {
-    drawDay5Letter();
-    fill(0, 0, 0, 150);
-    rect(0, height - 20, width, 20);
-    fill("#ECE7D1");
-    textAlign(CENTER, CENTER);
-    textSize(8);
-    text("[ PRESS SPACE TO CLOSE ]", width / 2, height - 10);
-    return;
-  }
 
   push();
 
@@ -1017,8 +1110,10 @@ function drawUIPopup() {
     tint(255, random(180, 255));
   }
 
-  if (img) image(img, 0, 0, width, height); // 完美全图覆盖
+  if (img) image(img, 0, 0, width, height); // full-screen image
   pop();
+
+  drawCoins(); // clickable coins layered on top of popup image
 
   fill(0, 0, 0, 150);
   rect(0, height - 20, width, 20);
@@ -1030,6 +1125,139 @@ function drawUIPopup() {
     text("[ 1: Something is wrong   |   2: Looks normal ]", width / 2, height - 10);
   } else {
     text("[ PRESS SPACE TO CLOSE ]", width / 2, height - 10);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COIN SYSTEM
+// ─────────────────────────────────────────────────────────────────────────────
+
+function getCoinConfig(day) {
+  if (day === 1) return { required: 3, size: 16, opacity: 255 };
+  if (day === 3) return { required: 4, size: 12, opacity: 255 };
+  return            { required: 5, size:  8, opacity: 255 };
+}
+
+const COIN_DIALOGUES = {
+  1: {
+    lines: [
+      "I might need this.",
+      "Better bring some change.",
+      "That should be enough.",
+    ],
+    goalLine: "I can grab some groceries.",
+  },
+  3: {
+    lines: [
+      "Did I already take one?",
+      "Was this here before\u2026?",
+      "Why am I collecting these again?",
+      "This should be enough\u2026 I hope.",
+    ],
+    goalLine: "It feels important.",
+  },
+  5: {
+    lines: [
+      "I need more.",
+      "Still not enough.",
+      "Why are there so many\u2026?",
+      "Did I already check here?",
+      "I need them.",
+    ],
+    goalLine: null,
+  },
+};
+
+function initDailyCoins(day) {
+  dailyCoinPlan        = {};
+  dailyCoinGoalReached = false;
+  coinCount            = 0;
+  activeCoins          = [];
+
+  let cfg = getCoinConfig(day);
+  let popupSteps = [0, 1, 3, 5, 6, 8, 9];
+
+  for (let i = popupSteps.length - 1; i > 0; i--) {
+    let j = floor(random(i + 1));
+    let tmp = popupSteps[i];
+    popupSteps[i] = popupSteps[j];
+    popupSteps[j] = tmp;
+  }
+
+  for (let i = 0; i < min(cfg.required, popupSteps.length); i++) {
+    dailyCoinPlan[popupSteps[i]] = 1;
+  }
+
+  updateCoinUI();
+}
+
+function getCoinSpawnPos(day) {
+  if (day === 3) {
+    let zones = [
+      { x1:  8, x2: 46, y1:  8, y2: 40 },
+      { x1: 274, x2: 312, y1:  8, y2: 40 },
+      { x1:  8, x2: 46, y1: 124, y2: 156 },
+      { x1: 274, x2: 312, y1: 124, y2: 156 },
+    ];
+    let z = zones[floor(random(zones.length))];
+    return { x: random(z.x1, z.x2), y: random(z.y1, z.y2) };
+  }
+  if (day === 5) {
+    let zones = [
+      { x1:  4, x2: 22, y1:  4, y2: 22 },
+      { x1: 298, x2: 316, y1:  4, y2: 22 },
+      { x1:  4, x2: 22, y1: 140, y2: 158 },
+      { x1: 298, x2: 316, y1: 140, y2: 158 },
+    ];
+    let z = zones[floor(random(zones.length))];
+    return { x: random(z.x1, z.x2), y: random(z.y1, z.y2) };
+  }
+  return {
+    x: random(25, width - 25),
+    y: random(18, height - 32),
+  };
+}
+
+function spawnCoinsForPopup() {
+  activeCoins = [];
+  let numCoins = dailyCoinPlan[world.sequenceStep] || 0;
+  for (let i = 0; i < numCoins; i++) {
+    let pos = getCoinSpawnPos(world.currentDay);
+    activeCoins.push({ x: pos.x, y: pos.y, collected: false });
+  }
+}
+
+function drawCoins() {
+  if (!coinImg || activeCoins.length === 0) return;
+  let cfg = getCoinConfig(world.currentDay);
+  let sz  = cfg.size;
+
+  push();
+  imageMode(CENTER);
+  for (let c of activeCoins) {
+    if (c.collected) continue;
+    let bob = sin(millis() * 0.004 + c.x * 0.05) * 2;
+    tint(255, cfg.opacity);
+    image(coinImg, c.x, c.y + bob, sz, sz);
+  }
+  noTint();
+  pop();
+}
+
+function updateCoinUI() {
+  let cfg     = getCoinConfig(world.currentDay);
+  let countEl = document.getElementById("coin-count");
+  let hintEl  = document.getElementById("coin-hint");
+
+  if (countEl) countEl.innerText = coinCount + " / " + cfg.required;
+  if (hintEl) {
+    if (coinCount >= cfg.required) {
+      hintEl.innerText   = "ready to go out";
+      hintEl.style.color = "#4a7a30";
+    } else {
+      hintEl.innerText   = (cfg.required - coinCount) + " more needed";
+      hintEl.style.color = "#7a6a4f";
+    }
   }
 }
 
@@ -1182,6 +1410,7 @@ function drawDayStartPopup() {
 }
 
 function processSequence() {
+  activeCoins = []; // clear coins from any popup just closed
   gameState = "TRANSITION";
 
   if (world.sequenceStep === 10) {
@@ -1207,6 +1436,12 @@ function processSequence() {
 
   world.advanceSequence();
 
+  // Day 5: closing the mirror popup triggers the elderly sprite swap
+  if (world.currentDay === 5 && world.sequenceStep === 2 && !day5MirrorDone) {
+    day5MirrorDone          = true;
+    player.useElderlySprite = true;
+  }
+
   if (world.sequenceStep === 3) {
     world.changeRoom("Kitchen");
     player.x = 160;
@@ -1224,6 +1459,7 @@ function processSequence() {
 
   setTimeout(() => {
     gameState = "EXPLORE";
+    updateMapHighlight(); // keep map in sync after every room transition
 
     if ((world.currentDay === 3 || world.currentDay === 5) && world.sequenceStep === 4) {
       document.getElementById("npc-name").innerText = "Partner";
@@ -1396,6 +1632,7 @@ function _transitionToDay(nextDay) {
         attentionSystem.reset();
         isDistorted = false;
         isWaitingForObservationChoice = false;
+        initDailyCoins(nextDay);
         setMusicDistortionLevel(0);
 
         document.getElementById("day-display").innerText = "Day " + nextDay;
@@ -1452,6 +1689,8 @@ function startGame() {
   if (document.activeElement) document.activeElement.blur();
   document.getElementById("checklist-panel").style.visibility = "hidden";
   document.getElementById("attention-panel").style.visibility = "hidden";
+  document.getElementById("coin-panel").style.visibility      = "visible";
+  document.getElementById("map-panel").style.visibility       = "visible";
   document.getElementById("npc-name").innerText = "System";
   document.getElementById("dialogue-text").innerText =
     "Note to self: don\u2019t forget\u2026 finish routine before leaving.";
@@ -1495,6 +1734,7 @@ function restartGame() {
   if (retryDay === 5) timerSystem.enableDay5Mode();
 
   attentionSystem.reset();
+  initDailyCoins(retryDay);
   setMusicDistortionLevel(0); // reset audio distortion on restart
   const _alarmEl = document.getElementById("alarm-sound");
   _alarmEl.pause(); _alarmEl.currentTime = 0; // stop alarm on restart
@@ -1503,6 +1743,8 @@ function restartGame() {
   _observationJustAnswered = false;
 
   document.getElementById("day-display").innerText = "Day " + retryDay;
+  document.getElementById("coin-panel").style.visibility = "visible";
+  document.getElementById("map-panel").style.visibility  = "visible";
   document.getElementById("npc-name").innerText = "System";
   document.getElementById("dialogue-text").innerText =
     "Note to self: don\u2019t forget\u2026 finish routine before leaving.";
@@ -1711,6 +1953,8 @@ function startFamilyScene() {
   document.getElementById("checklist-panel").style.visibility = "hidden";
   document.getElementById("attention-panel").style.visibility = "hidden";
   document.getElementById("timer-panel").style.visibility     = "hidden";
+  document.getElementById("coin-panel").style.visibility      = "hidden";
+  document.getElementById("map-panel").style.visibility       = "hidden";
   document.getElementById("npc-name").innerText              = "";
   document.getElementById("dialogue-text").innerText         = "";
 
@@ -1727,9 +1971,12 @@ function startFamilyScene() {
  *   7 — choice (hold hand / pull away)
  */
 function drawFamilyScene() {
-  // Dark bedroom backdrop
-  if (bgImages["Bedroom"]) image(bgImages["Bedroom"], 0, 0, width, height);
-  fill(0, 0, 0, 210);
+  // Dark bedroom backdrop (phase 7 choice screen uses EndingB image)
+  let sceneBg = (familyScenePhase === 7 && bgImages["EndingB"])
+    ? bgImages["EndingB"]
+    : bgImages["Bedroom"];
+  if (sceneBg) image(sceneBg, 0, 0, width, height);
+  fill(0, 0, 0, familyScenePhase === 7 ? 140 : 210);
   noStroke();
   rect(0, 0, width, height);
 

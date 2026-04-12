@@ -51,6 +51,40 @@
         </div>
       </div>
 
+      <div id="coin-panel" style="visibility:hidden">
+        <div id="coin-title">Change</div>
+        <div id="coin-count-row">
+          <span id="coin-icon">&#9673;</span>
+          <span id="coin-count">0</span>
+        </div>
+        <div id="coin-hint"></div>
+      </div>
+
+      <div id="map-panel" style="visibility:hidden">
+        <div id="map-title">Map</div>
+        <div id="map-container">
+          <img id="map-img" src="assets/IMG_9022.JPG" alt="Floor plan">
+          <div id="map-grid">
+            <!-- top-left  → Bedroom -->
+            <div class="map-zone" id="zone-bedroom"    onclick="navigateToRoom('Bedroom')"   >
+              <span class="map-label">Bedroom</span>
+            </div>
+            <!-- top-right → Outside -->
+            <div class="map-zone" id="zone-outside"    onclick="navigateToRoom('Outside')"   >
+              <span class="map-label">Outside</span>
+            </div>
+            <!-- bottom-left  → Kitchen -->
+            <div class="map-zone" id="zone-kitchen"    onclick="navigateToRoom('Kitchen')"   >
+              <span class="map-label">Kitchen</span>
+            </div>
+            <!-- bottom-right → Living Room -->
+            <div class="map-zone" id="zone-livingroom" onclick="navigateToRoom('LivingRoom')">
+              <span class="map-label">Living<br>Room</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="attention-panel" style="visibility:hidden">
         <div id="attention-title">Clarity</div>
         <div id="attention-bar">

@@ -622,3 +622,147 @@ body {
   background: rgba(50, 45, 35, 0.9);
 }
 
+
+/* --- Map Panel --- */
+#map-panel {
+  position: absolute;
+  top: 315px;
+  right: -170px;
+  width: 160px;
+  background: rgba(236, 231, 209, 0.98);
+  border: 3px solid #8a7650;
+  border-radius: 4px;
+  padding: 8px;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 75;
+  backdrop-filter: blur(2px);
+}
+
+#map-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5a4a2f;
+  text-transform: uppercase;
+  border-bottom: 2px solid #8a7650;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+#map-container {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+}
+
+#map-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+  image-rendering: pixelated;
+}
+
+#map-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.map-zone {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.map-zone:hover {
+  background: rgba(138, 118, 80, 0.30);
+}
+
+.map-zone.map-active {
+  background: rgba(138, 118, 80, 0.22);
+  box-shadow: inset 0 0 0 2px #8a7650;
+}
+
+#zone-bedroom    { border-radius: 2px 0 0 0; }
+#zone-outside    { border-radius: 0 2px 0 0; }
+#zone-kitchen    { border-radius: 0 0 0 2px; }
+#zone-livingroom { border-radius: 0 0 2px 0; }
+
+.map-label {
+  font-size: 7px;
+  font-weight: 700;
+  color: #3a2a10;
+  text-align: center;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(236, 231, 209, 1), 0 0 10px rgba(236, 231, 209, 0.8);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.map-zone:hover .map-label,
+.map-zone.map-active .map-label {
+  opacity: 1;
+}
+
+/* --- Coin Panel --- */
+#coin-panel {
+  position: absolute;
+  top: 220px;
+  right: -170px;
+  width: 160px;
+  background: rgba(236, 231, 209, 0.98);
+  border: 3px solid #8a7650;
+  border-radius: 4px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 75;
+  backdrop-filter: blur(2px);
+}
+
+#coin-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5a4a2f;
+  text-transform: uppercase;
+  border-bottom: 2px solid #8a7650;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+#coin-count-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#coin-icon {
+  font-size: 18px;
+  color: #c8a020;
+  line-height: 1;
+}
+
+#coin-count {
+  font-size: 22px;
+  font-weight: 700;
+  color: #5a4a2f;
+  line-height: 1;
+}
+
+#coin-hint {
+  font-size: 9px;
+  color: #7a6a4f;
+  margin-top: 5px;
+  font-style: italic;
+  min-height: 12px;
+}
